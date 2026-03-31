@@ -115,8 +115,11 @@ class TestValorMonetario(unittest.TestCase):
 
 class TestBanco(unittest.TestCase):
     def test_criar_banco(self):
+        # Inline setup
+        moeda = Moeda.BRL
+        nome_do_banco = "HSBC"
         # Exercise SUT
-        banco = Banco("HSBC", Moeda.BRL)
+        banco = Banco(nome_do_banco, moeda)
         # Verify Result
         self.assertEqual(banco.nome, "HSBC")
         self.assertEqual(banco.moeda, Moeda.BRL)
