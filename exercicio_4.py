@@ -1,6 +1,6 @@
 import unittest
-from exercicio_3_4_src.src import PuzzleGame, puzzle_game
-from exercicio_3_4_src.src.invalid_position_exception import InvalidPositionException
+from src.src import PuzzleGame
+from src.src.invalid_position_exception import InvalidPositionException
 
 
 class TestPuzzleGameGetTile(unittest.TestCase):

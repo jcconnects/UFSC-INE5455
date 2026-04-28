@@ -1,5 +1,5 @@
 import unittest
-from exercicio_3_4_src.src import PuzzleGame, puzzle_game
+from src.src import PuzzleGame
 
 
 class TestPuzzleGameMoveTile(unittest.TestCase):

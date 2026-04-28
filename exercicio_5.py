@@ -1,24 +1,6 @@
 import unittest
-from exercicio_3_4_src.src import PuzzleGame, puzzle_game
-from exercicio_3_4_src.src.invalid_position_exception import InvalidPositionException
-
-#### PARA EXECUTAR
-
-# rm .mutmut-cache && mutmut run --paths-to-mutate exercicio_3_4_src/src/puzzle_game.py --tests-dir . --runner "python -m pytest exercicio_5.py -x -q"
-# mutmut results
-# mutmut show <ID>
-
-#### RESULTADOS ORIGINAIS
-
-# Survived 🙁 (63)
-# ---- exercicio_3_4_src/src/puzzle_game.py (63) ----
-# 14, 19, 23, 25, 32-37, 47-97, 101, 107
-
-#### RESULTADOS COM NOVOS TESTES
-
-# Survived 🙁 (57)
-# ---- exercicio_3_4_src/src/puzzle_game.py (57) ----
-# 14, 19, 33-36, 47-97
+from src.src import PuzzleGame
+from src.src.invalid_position_exception import InvalidPositionException
 
 
 class TestPuzzleGameGetTile(unittest.TestCase):
@@ -43,7 +25,7 @@ class TestPuzzleGameGetTile(unittest.TestCase):
 
     def test_move_outside_board_tile(self):
         # Path2: 1-2-3(F)-6
-        self.puzzle_game.dic_positions_of_tiles[9] = (10,10)
+        self.puzzle_game.dic_positions_of_tiles[9] = (10, 10)
         # A peca 9 esta em (10,10), fora do tabuleiro, portanto o movimento deve ser inválido.
         moved = self.puzzle_game.move_tile(9)
 
@@ -64,7 +46,7 @@ class TestPuzzleGameGetTile(unittest.TestCase):
     # ==========================================================================
     def test_get_existing_tile(self):
         # Path1: 1(T)-2(F)-5
-        tile = self.puzzle_game.get_tile(1,1)
+        tile = self.puzzle_game.get_tile(1, 1)
         print("Value of existing tile", tile)
 
         self.assertEqual(tile, 1)
@@ -72,7 +54,7 @@ class TestPuzzleGameGetTile(unittest.TestCase):
     def test_get_empty_position(self):
         # Path2: 1(T)-2(T)-3
 
-        tile = self.puzzle_game.get_tile(3,3)
+        tile = self.puzzle_game.get_tile(3, 3)
         print("Value of empty tile", tile)
 
         self.assertEqual(tile, " ")
@@ -80,15 +62,15 @@ class TestPuzzleGameGetTile(unittest.TestCase):
     def test_tile_in_line_zero(self):
         # Path3: 1(F)-4
         with self.assertRaises(InvalidPositionException):
-            self.puzzle_game.get_tile(0,1)
+            self.puzzle_game.get_tile(0, 1)
 
     def test_tile_in_negative_line(self):
         with self.assertRaises(InvalidPositionException):
-            self.puzzle_game.get_tile(-1,1)
+            self.puzzle_game.get_tile(-1, 1)
 
     def test_get_tile_in_column_bigger_than_board(self):
         with self.assertRaises(InvalidPositionException):
-            self.puzzle_game.get_tile(1,5)
+            self.puzzle_game.get_tile(1, 5)
 
     # ==========================================================================
     # Testes Exercício 5
@@ -96,15 +78,15 @@ class TestPuzzleGameGetTile(unittest.TestCase):
     # Test 101
     def test_tile_in_column_zero(self):
         with self.assertRaises(InvalidPositionException):
-            self.puzzle_game.get_tile(1,0)
+            self.puzzle_game.get_tile(1, 0)
 
     # Test 23, 107
     # 23 - Cria um tabuleiro 3x3 e o tile (3,1) é igual a 3. __put_tiles_in_the_board__ mexe em board e não no dicionário de tiles, que é onde os outros métodos fazem as validações.
-        # 1 |  |
-        # 2 |  |
-        # 3 |  |
+    # 1 |  |
+    # 2 |  |
+    # 3 |  |
     def test_get_tile_in_same_line_of_empty(self):
-        tile = self.puzzle_game.get_tile(3,1)
+        tile = self.puzzle_game.get_tile(3, 1)
         self.puzzle_game.board.grid
 
         self.assertEqual(tile, 7)
@@ -113,10 +95,9 @@ class TestPuzzleGameGetTile(unittest.TestCase):
     # 32 - verifica só se a peça está dentro do tabuleiro OU está adjacente de um espaço livre. Nesse caso a peça só está dentro do tabuleiro, mas não está adjacente a um espaço livre
     # 37 - é a mesma verificação anterior, mas a mutação é mudar o resultado do else para verdadeiro. O assertFalse pega essa mutação.
     def test_move_tile_from_a_position_to_the_empty_position_that_is_not_adjacent(self):
-        moved = self.puzzle_game.move_tile_from_a_position_to_the_empty_position(1,1)
+        moved = self.puzzle_game.move_tile_from_a_position_to_the_empty_position(1, 1)
         self.assertFalse(moved)
+
 
 if __name__ == "__main__":
     unittest.main()
-
-
