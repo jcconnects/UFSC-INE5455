@@ -14,7 +14,6 @@ from puzzle_game_with_mock import PuzzleGameWithPlayer
 # 3. Faça os mesmos dois testes com mocks para o método
 # get_tile da classe PuzzleGame.
 
-
 # ==========================================================================
 # PARTE 1
 # ==========================================================================
@@ -36,17 +35,17 @@ class TestPuzzleGameGetTile(unittest.TestCase):
 
     @patch('src.src.puzzle_game.PuzzleGame.get_tile')
     def test_get_existing_tile_with_mock(self, mock_puzzle_game_get_tile):
-        mock_puzzle_game_get_tile.return_value = "foo"
+        mock_puzzle_game_get_tile.return_value = 1
         tile = self.puzzle_game.get_tile(1,1)
 
-        self.assertEqual(tile, "foo")
+        self.assertEqual(tile, 1)
 
     @patch('src.src.puzzle_game.PuzzleGame.get_tile')
     def test_get_empty_position_with_mock(self, mock_puzzle_game_get_tile):
-        mock_puzzle_game_get_tile.return_value = "bar"
+        mock_puzzle_game_get_tile.return_value = " "
         tile = self.puzzle_game.get_tile(3,3)
 
-        self.assertEqual(tile, "bar")
+        self.assertEqual(tile, " ")
 
 
 # PARTE 2
@@ -77,12 +76,12 @@ class TestPuzzleGameWithPlayerEndOfGame(unittest.TestCase):
 
         self.assertEqual(result, "Saved")
 
-    # def test_end_of_game_when_not_finished(self):
-    #     # Move um tile para retirar o board do estado final
-    #     self.game.move_tile_from_a_position_to_the_empty_position(3, 2)
-    #     result = self.game.end_of_the_game()
-    #
-    #     self.assertEqual(result, "Game not finished")
+    def test_end_of_game_when_not_finished(self):
+        # Move um tile para retirar o board do estado final
+        self.game.move_tile_from_a_position_to_the_empty_position(3, 2)
+        result = self.game.end_of_the_game()
+
+        self.assertEqual(result, "Game not finished")
 
     @patch('puzzle_game_with_mock.PuzzleGameWithPlayer.save_game_to_file')
     def test_end_of_game_when_finished_with_mock(self, mock_save):
@@ -94,6 +93,7 @@ class TestPuzzleGameWithPlayerEndOfGame(unittest.TestCase):
 
     @patch('puzzle_game_with_mock.PuzzleGameWithPlayer.save_game_to_file')
     def test_end_of_game_when_not_finished_with_mock(self, mock_save):
+        mock_save.return_value = "Saved"
         self.game.move_tile_from_a_position_to_the_empty_position(2, 3)
         result = self.game.end_of_the_game()
 
