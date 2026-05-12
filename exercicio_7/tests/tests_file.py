@@ -13,3 +13,12 @@ class Test(unittest.TestCase):
         empresa = Empresa(nome="WEG")
         self.assertIsInstance(empresa, Empresa)
         self.assertEqual(empresa.nome, "WEG")
+    
+    # Teste 02
+    def test_incluir_um_funcionario(self):
+        empresa = Empresa(nome="WEG")
+        empresa.incluir_funcionario("João")
+        self.assertEqual(len(empresa.funcionarios), 1)
+        self.assertEqual(empresa.funcionarios[0].nome, "João")
+
+
