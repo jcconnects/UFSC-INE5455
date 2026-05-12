@@ -48,3 +48,8 @@ class Test(unittest.TestCase):
     def test_criar_empresa_com_nome_vazio(self):
         with self.assertRaises(ValueError):
             Empresa(nome="")
+        
+    # Teste 07
+    def test_criar_funcionario_com_nome_vazio(self):
+        with self.assertRaises(ValueError):
+            self.empresa.criar_funcionario(nome="")
