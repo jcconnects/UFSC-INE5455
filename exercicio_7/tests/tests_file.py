@@ -19,6 +19,6 @@ class Test(unittest.TestCase):
         empresa = Empresa(nome="WEG")
         empresa.incluir_funcionario("João")
         self.assertEqual(len(empresa.funcionarios), 1)
-        self.assertEqual(empresa.funcionarios[0].nome, "João")
+        self.assertEqual(empresa.funcionarios[0], "João")
 
 
