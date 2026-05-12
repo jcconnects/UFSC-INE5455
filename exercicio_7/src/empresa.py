@@ -10,6 +10,8 @@ class Empresa:
         self.projetos = []
 
     def criar_funcionario(self, nome):
+        if not nome:
+            raise ValueError("O nome do funcionário não pode ser vazio.")
         funcionario = Funcionario(id=len(self.funcionarios) + 1, nome=nome)
         self.funcionarios.append(funcionario)
         return funcionario
