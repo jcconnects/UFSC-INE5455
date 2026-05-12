@@ -48,8 +48,16 @@ class Test(unittest.TestCase):
     def test_criar_empresa_com_nome_vazio(self):
         with self.assertRaises(ValueError):
             Empresa(nome="")
-        
+
     # Teste 07
     def test_criar_funcionario_com_nome_vazio(self):
         with self.assertRaises(ValueError):
             self.empresa.criar_funcionario(nome="")
+
+    # Teste 08
+    def test_assinar_um_funcionario_a_um_projeto(self):
+        funcionario = self.empresa.criar_funcionario(nome="Augusto")
+        projeto = self.empresa.criar_projeto(nome="O pior projeto de todos")
+        self.empresa.assinar_funcionario_a_projeto(funcionario, projeto)
+        self.assertTrue(funcionario in projeto.funcionarios)
+        self.assertTrue(projeto in funcionario.projetos)
