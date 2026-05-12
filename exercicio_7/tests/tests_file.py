@@ -38,3 +38,8 @@ class Test(unittest.TestCase):
         self.empresa.criar_projeto(nome="Motor a jato")
         self.assertEqual(len(self.empresa.projetos), 1)
         self.assertEqual(self.empresa.projetos[0].nome, "Motor a jato")
+
+    # Teste 05
+    def test_criar_projeto_com_nome_vazio(self):
+        with self.assertRaises(ValueError):
+            self.empresa.criar_projeto(nome="")
