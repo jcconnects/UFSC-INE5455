@@ -10,6 +10,9 @@ from src.funcionario import Funcionario
 
 class Test(unittest.TestCase):
 
+    def setUp(self):
+        self.empresa = Empresa(nome="WEG")
+
     # Teste 01
     def test_criar_empresa(self):
         empresa = Empresa(nome="WEG")
@@ -18,23 +21,20 @@ class Test(unittest.TestCase):
 
     # Teste 02
     def test_criar_um_funcionario(self):
-        empresa = Empresa(nome="WEG")
-        funcionario = empresa.criar_funcionario(nome="João")
-        self.assertEqual(len(empresa.funcionarios), 1)
-        self.assertEqual(empresa.funcionarios[0], funcionario)
+        funcionario = self.empresa.criar_funcionario(nome="João")
+        self.assertEqual(len(self.empresa.funcionarios), 1)
+        self.assertEqual(self.empresa.funcionarios[0], funcionario)
 
     # Teste 03
     def test_criar_dois_funcionarios(self):
-        empresa = Empresa(nome="WEG")
-        funcionario1 = empresa.criar_funcionario(nome="João")
-        funcionario2 = empresa.criar_funcionario(nome="Maria")
-        self.assertEqual(len(empresa.funcionarios), 2)
-        self.assertEqual(empresa.funcionarios[0], funcionario1)
-        self.assertEqual(empresa.funcionarios[1], funcionario2)
+        funcionario1 = self.empresa.criar_funcionario(nome="João")
+        funcionario2 = self.empresa.criar_funcionario(nome="Maria")
+        self.assertEqual(len(self.empresa.funcionarios), 2)
+        self.assertEqual(self.empresa.funcionarios[0], funcionario1)
+        self.assertEqual(self.empresa.funcionarios[1], funcionario2)
 
     # Teste 04
     def test_criar_um_projeto(self):
-        empresa = Empresa(nome="WEG")
-        empresa.criar_projeto(nome="Motor a jato")
-        self.assertEqual(len(empresa.projetos), 1)
-        self.assertEqual(empresa.projetos[0].nome, "Motor a jato")
+        self.empresa.criar_projeto(nome="Motor a jato")
+        self.assertEqual(len(self.empresa.projetos), 1)
+        self.assertEqual(self.empresa.projetos[0].nome, "Motor a jato")
