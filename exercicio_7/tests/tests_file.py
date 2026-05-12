@@ -7,6 +7,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from src.empresa import Empresa
 from src.funcionario import Funcionario
 
+
 class Test(unittest.TestCase):
 
     # Teste 01
@@ -14,7 +15,7 @@ class Test(unittest.TestCase):
         empresa = Empresa(nome="WEG")
         self.assertIsInstance(empresa, Empresa)
         self.assertEqual(empresa.nome, "WEG")
-    
+
     # Teste 02
     def test_criar_um_funcionario(self):
         empresa = Empresa(nome="WEG")
@@ -31,3 +32,9 @@ class Test(unittest.TestCase):
         self.assertEqual(empresa.funcionarios[0], funcionario1)
         self.assertEqual(empresa.funcionarios[1], funcionario2)
 
+    # Teste 04
+    def test_criar_um_projeto(self):
+        empresa = Empresa(nome="WEG")
+        empresa.criar_projeto(nome="Motor a jato")
+        self.assertEqual(len(empresa.projetos), 1)
+        self.assertEqual(empresa.projetos[0].nome, "Motor a jato")
