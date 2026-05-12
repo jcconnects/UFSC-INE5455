@@ -21,4 +21,11 @@ class Test(unittest.TestCase):
         self.assertEqual(len(empresa.funcionarios), 1)
         self.assertEqual(empresa.funcionarios[0], "João")
 
-
+    # Teste 03
+    def test_incluir_dois_funcionarios(self):
+        empresa = Empresa(nome="WEG")
+        empresa.incluir_funcionario("João")
+        empresa.incluir_funcionario("Maria")
+        self.assertEqual(len(empresa.funcionarios), 2)
+        self.assertEqual(empresa.funcionarios[0], "João")
+        self.assertEqual(empresa.funcionarios[1], "Maria")
