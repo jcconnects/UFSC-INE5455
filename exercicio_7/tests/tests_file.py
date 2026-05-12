@@ -11,5 +11,5 @@ class Test(unittest.TestCase):
     # Teste 01
     def test_criar_empresa(self):
         empresa = Empresa(nome="WEG")
-        self.assertEqual(type(empresa), type(Empresa))
+        self.assertIsInstance(empresa, Empresa)
         self.assertEqual(empresa.nome, "WEG")
