@@ -13,6 +13,8 @@ class Empresa:
         return funcionario
 
     def criar_projeto(self, nome):
+        if not nome:
+            raise ValueError("O nome do projeto não pode ser vazio.")
         proneto = Projeto(id=len(self.projetos) + 1, nome=nome)
         self.projetos.append(proneto)
 
