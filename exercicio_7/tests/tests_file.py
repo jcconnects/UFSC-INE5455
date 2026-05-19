@@ -86,3 +86,31 @@ class Test(unittest.TestCase):
         self.assertTrue(funcionario_jose in projeto_tdd.funcionarios)
         self.assertTrue(funcionario_carlos in projeto_iot.funcionarios)
         self.assertTrue(funcionario_jose in projeto_tdd.funcionarios)
+
+    # Teste 11
+    def test_criar_varios_funcionarios(self):
+        funcionario_joao = self.empresa.criar_funcionario(nome="João")
+        funcionario_maria = self.empresa.criar_funcionario(nome="Maria")
+        funcionario_ana = self.empresa.criar_funcionario(nome="Ana")
+        funcionario_carlos = self.empresa.criar_funcionario(nome="Carlos")
+        funcionario_jose = self.empresa.criar_funcionario(nome="José")
+        self.assertEqual(len(self.empresa.funcionarios), 5)
+        self.assertEqual(self.empresa.funcionarios[0], funcionario_joao)
+        self.assertEqual(self.empresa.funcionarios[1], funcionario_maria)
+        self.assertEqual(self.empresa.funcionarios[2], funcionario_ana)
+        self.assertEqual(self.empresa.funcionarios[3], funcionario_carlos)
+        self.assertEqual(self.empresa.funcionarios[4], funcionario_jose)
+
+    # Teste 12
+    def test_criar_varios_projetos(self):
+        projeto_av = self.empresa.criar_projeto(nome="AV")
+        projeto_carro = self.empresa.criar_projeto(nome="Carro")
+        projeto_hidroaviao = self.empresa.criar_projeto(nome="Hidroaviao")
+        projeto_quantico = self.empresa.criar_projeto(nome="Quantico")
+        projeto_espacial = self.empresa.criar_projeto(nome="Espacial")
+        self.assertEqual(len(self.empresa.projetos), 5)
+        self.assertEqual(self.empresa.projetos[0], projeto_av)
+        self.assertEqual(self.empresa.projetos[1], projeto_carro)
+        self.assertEqual(self.empresa.projetos[2], projeto_hidroaviao)
+        self.assertEqual(self.empresa.projetos[3], projeto_quantico)
+        self.assertEqual(self.empresa.projetos[4], projeto_espacial)
