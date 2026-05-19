@@ -71,3 +71,18 @@ class Test(unittest.TestCase):
         self.empresa.assinar_funcionario_a_projeto(funcionario_jose, projeto)
         self.assertTrue(funcionario_carlos in projeto.funcionarios)
         self.assertTrue(funcionario_jose in projeto.funcionarios)
+
+    # Teste 10
+    def test_assinar_dois_funcionarios_a_dois_projetos(self):
+        funcionario_carlos = self.empresa.criar_funcionario(nome="Carlos")
+        funcionario_jose = self.empresa.criar_funcionario(nome="José")
+        projeto_iot = self.empresa.criar_projeto(nome="IoT")
+        projeto_tdd = self.empresa.criar_projeto(nome="TDD")
+        self.empresa.assinar_funcionario_a_projeto(funcionario_carlos, projeto_iot)
+        self.empresa.assinar_funcionario_a_projeto(funcionario_jose, projeto_tdd)
+        self.empresa.assinar_funcionario_a_projeto(funcionario_carlos, projeto_iot)
+        self.empresa.assinar_funcionario_a_projeto(funcionario_jose, projeto_tdd)
+        self.assertTrue(funcionario_carlos in projeto_iot.funcionarios)
+        self.assertTrue(funcionario_jose in projeto_tdd.funcionarios)
+        self.assertTrue(funcionario_carlos in projeto_iot.funcionarios)
+        self.assertTrue(funcionario_jose in projeto_tdd.funcionarios)
