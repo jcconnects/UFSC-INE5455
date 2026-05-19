@@ -281,3 +281,20 @@ class Test(unittest.TestCase):
         )
         ocorrencia.mudar_responsavel(funcionario_bob.id)
         self.assertEqual(ocorrencia.responsavel, funcionario_bob.id)
+
+    # Teste 22
+    def test_mudar_responsavel_de_ocorrencia_fechada(self):
+        projeto = self.empresa.criar_projeto(nome="Projeto 22")
+        funcionario_carlos = self.empresa.criar_funcionario(nome="Carlos")
+        funcionario_diana = self.empresa.criar_funcionario(nome="Diana")
+        self.empresa.assinar_funcionario_a_projeto(funcionario_carlos, projeto)
+        self.empresa.assinar_funcionario_a_projeto(funcionario_diana, projeto)
+        ocorrencia = projeto.criar_ocorrencia(
+            tipo=TipoOcorrencia.BUG,
+            prioridade=PrioridadeOcorrencia.MEDIA,
+            resumo="Bug fechado",
+            responsavel=funcionario_carlos.id,
+        )
+        ocorrencia.fechar()
+        with self.assertRaises(ValueError):
+            ocorrencia.mudar_responsavel(funcionario_diana.id)
