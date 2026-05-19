@@ -229,7 +229,7 @@ class Test(unittest.TestCase):
 
     # Teste 18
     def test_criar_ocorrencia_prioridade_invalido(self):
-        projeto = self.empresa.criar_projeto(nome="Projeto X")
+        projeto = self.empresa.criar_projeto(nome="Projeto bala")
         funcionario = self.empresa.criar_funcionario(nome="Ana")
         self.empresa.assinar_funcionario_a_projeto(funcionario, projeto)
         with self.assertRaises(ValueError):
@@ -242,8 +242,8 @@ class Test(unittest.TestCase):
 
     # Teste 19
     def test_criar_ocorrencia_resumo_invalido(self):
-        projeto = self.empresa.criar_projeto(nome="Projeto X")
-        funcionario = self.empresa.criar_funcionario(nome="Ana")
+        projeto = self.empresa.criar_projeto(nome="Algum projeto")
+        funcionario = self.empresa.criar_funcionario(nome="Joaquim")
         self.empresa.assinar_funcionario_a_projeto(funcionario, projeto)
         with self.assertRaises(ValueError):
             projeto.criar_ocorrencia(
@@ -255,7 +255,9 @@ class Test(unittest.TestCase):
 
     # Teste 20
     def test_criar_ocorrencia_responsavel_invalido(self):
-        projeto = self.empresa.criar_projeto(nome="Projeto X")
+        projeto = self.empresa.criar_projeto(nome="Piloto")
+        funcionario = self.empresa.criar_funcionario(nome="Carol")
+        self.empresa.assinar_funcionario_a_projeto(funcionario, projeto)
         with self.assertRaises(ValueError):
             projeto.criar_ocorrencia(
                 tipo=TipoOcorrencia.BUG,
