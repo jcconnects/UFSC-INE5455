@@ -1,4 +1,4 @@
-from src.ocorrencia import Ocorrencia
+from src.ocorrencia import Ocorrencia, PrioridadeOcorrencia, TipoOcorrencia
 
 
 class Projeto:
@@ -9,6 +9,15 @@ class Projeto:
         self.ocorrencias = []
     
     def criar_ocorrencia(self, tipo, prioridade, resumo, responsavel):
+        if tipo not in TipoOcorrencia:
+            raise ValueError("Tipo de ocorrência inválido.")
+        if prioridade not in PrioridadeOcorrencia:
+            raise ValueError("Prioridade de ocorrência inválida.")
+        if not resumo:
+            raise ValueError("O resumo da ocorrência não pode ser vazio.")
+        if not any(f.id == responsavel for f in self.funcionarios):
+            raise ValueError("Funcionário responsável não está associado ao projeto.")
+
         ocorrencia = Ocorrencia(
             id=len(self.ocorrencias) + 1,
             tipo=tipo,
