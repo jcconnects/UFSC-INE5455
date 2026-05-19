@@ -131,7 +131,7 @@ class Test(unittest.TestCase):
         self.assertEqual(ocorrencia_bug.tipo, TipoOcorrencia.BUG)
         self.assertEqual(ocorrencia_bug.resumo, resumo)
 
-        self.assertEqual(ocorrencia_bug.responsavel, funcionario_jasmin)
+        self.assertEqual(ocorrencia_bug.responsavel, funcionario_jasmin.id)
         self.assertEqual(funcionario_jasmin.ocorrencias[0], ocorrencia_bug)
-        self.assertEqual(ocorrencia_bug.projeto, projeto_cco)
+        self.assertEqual(ocorrencia_bug.projeto, projeto_cco.id)
         self.assertEqual(projeto_cco.ocorrencias[0], ocorrencia_bug)
