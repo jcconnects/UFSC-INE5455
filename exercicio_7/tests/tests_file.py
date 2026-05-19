@@ -298,3 +298,61 @@ class Test(unittest.TestCase):
         ocorrencia.fechar()
         with self.assertRaises(ValueError):
             ocorrencia.mudar_responsavel(funcionario_diana.id)
+
+    # Teste 23
+    def test_modificar_prioridade_de_ocorrencia_aberta(self):
+        projeto = self.empresa.criar_projeto(nome="Projeto 23")
+        funcionario_eva = self.empresa.criar_funcionario(nome="Eva")
+        self.empresa.assinar_funcionario_a_projeto(funcionario_eva, projeto)
+        ocorrencia = projeto.criar_ocorrencia(
+            tipo=TipoOcorrencia.TAREFA,
+            prioridade=PrioridadeOcorrencia.BAIXA,
+            resumo="Tarefa aberta",
+            responsavel=funcionario_eva.id,
+        )
+        ocorrencia.modificar_prioridade(PrioridadeOcorrencia.ALTA)
+        self.assertEqual(ocorrencia.prioridade, PrioridadeOcorrencia.ALTA)
+
+    # Teste 24
+    def test_modificar_prioridade_de_ocorrencia_fechada(self):
+        projeto = self.empresa.criar_projeto(nome="Projeto 24")
+        funcionario_fred = self.empresa.criar_funcionario(nome="Fred")
+        self.empresa.assinar_funcionario_a_projeto(funcionario_fred, projeto)
+        ocorrencia = projeto.criar_ocorrencia(
+            tipo=TipoOcorrencia.TAREFA,
+            prioridade=PrioridadeOcorrencia.BAIXA,
+            resumo="Tarefa fechada",
+            responsavel=funcionario_fred.id,
+        )
+        ocorrencia.fechar()
+        with self.assertRaises(ValueError):
+            ocorrencia.modificar_prioridade(PrioridadeOcorrencia.ALTA)
+
+    # Teste 25
+    def test_fechar_ocorrencia_aberta(self):
+        projeto = self.empresa.criar_projeto(nome="Projeto 25")
+        funcionario_gabi = self.empresa.criar_funcionario(nome="Gabi")
+        self.empresa.assinar_funcionario_a_projeto(funcionario_gabi, projeto)
+        ocorrencia = projeto.criar_ocorrencia(
+            tipo=TipoOcorrencia.BUG,
+            prioridade=PrioridadeOcorrencia.ALTA,
+            resumo="Bug para fechar",
+            responsavel=funcionario_gabi.id,
+        )
+        ocorrencia.fechar()
+        self.assertFalse(ocorrencia.estado)
+
+    # Teste 26
+    def test_fechar_ocorrencia_fechada(self):
+        projeto = self.empresa.criar_projeto(nome="Projeto 26")
+        funcionario_hugo = self.empresa.criar_funcionario(nome="Hugo")
+        self.empresa.assinar_funcionario_a_projeto(funcionario_hugo, projeto)
+        ocorrencia = projeto.criar_ocorrencia(
+            tipo=TipoOcorrencia.BUG,
+            prioridade=PrioridadeOcorrencia.ALTA,
+            resumo="Bug ja fechado",
+            responsavel=funcionario_hugo.id,
+        )
+        ocorrencia.fechar()
+        with self.assertRaises(ValueError):
+            ocorrencia.fechar()
