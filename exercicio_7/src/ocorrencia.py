@@ -23,6 +23,11 @@ class Ocorrencia:
         self.projeto = projeto
         self.estado = True  # Aberta por padrão
 
+    def fechar(self):
+        if not self.estado:
+            raise ValueError("Ocorrência já está fechada.")
+        self.estado = False
+
     def mudar_responsavel(self, novo_responsavel):
         if not self.estado:
             raise ValueError("Não é possível mudar responsável de ocorrência fechada.")
