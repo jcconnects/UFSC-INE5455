@@ -19,9 +19,19 @@ class Ocorrencia:
         self.tipo = tipo
         self.prioridade = prioridade
         self.resumo = resumo
-        self.responsavel = responsavel
+        self._responsavel = responsavel
         self.projeto = projeto
         self.estado = True  # Aberta por padrão
+
+    @property
+    def responsavel(self):
+        return self._responsavel
+
+    @responsavel.setter
+    def responsavel(self, value):
+        if value is None:
+            raise ValueError("Responsável não pode ser None.")
+        self._responsavel = value
 
     def fechar(self):
         if not self.estado:

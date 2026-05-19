@@ -356,3 +356,28 @@ class Test(unittest.TestCase):
         ocorrencia.fechar()
         with self.assertRaises(ValueError):
             ocorrencia.fechar()
+
+    # Teste 27
+    def test_criar_ocorrencia_sem_responsavel(self):
+        projeto = self.empresa.criar_projeto(nome="Projeto 27")
+        with self.assertRaises(ValueError):
+            projeto.criar_ocorrencia(
+                tipo=TipoOcorrencia.BUG,
+                prioridade=PrioridadeOcorrencia.MEDIA,
+                resumo="Bug sem responsavel",
+                responsavel=None,
+            )
+
+    # Teste 28
+    def test_remover_responsavel_de_ocorrencia(self):
+        projeto = self.empresa.criar_projeto(nome="Projeto 28")
+        funcionario = self.empresa.criar_funcionario(nome="Ines")
+        self.empresa.assinar_funcionario_a_projeto(funcionario, projeto)
+        ocorrencia = projeto.criar_ocorrencia(
+            tipo=TipoOcorrencia.BUG,
+            prioridade=PrioridadeOcorrencia.MEDIA,
+            resumo="Bug com responsavel",
+            responsavel=funcionario.id,
+        )
+        with self.assertRaises(ValueError):
+            ocorrencia.responsavel = None
