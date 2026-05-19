@@ -121,11 +121,11 @@ class Test(unittest.TestCase):
         projeto_cco = self.empresa.criar_projeto(nome="Projetinho de CCO")
         funcionario_jasmin = self.empresa.criar_funcionario(nome="Jasmin")
         self.empresa.assinar_funcionario_a_projeto(
-            funcionario=funcionario_jasmin.id, projeto=projeto_cco.id
+            funcionario=funcionario_jasmin, projeto=projeto_cco
         )
         resumo = "Falha no sistema."
         ocorrencia_bug = self.empresa.projetos[0].criar_ocorrencia(
-            tipo=TipoOcorrencia.BUG, resumo=resumo, responsavel=funcionario_jasmin
+            tipo=TipoOcorrencia.BUG, resumo=resumo, responsavel=funcionario_jasmin.id
         )
         self.assertTrue(ocorrencia_bug.estado)
         self.assertEqual(ocorrencia_bug.tipo, TipoOcorrencia.BUG)
