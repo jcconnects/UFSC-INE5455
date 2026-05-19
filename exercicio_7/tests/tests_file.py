@@ -127,11 +127,11 @@ class Test(unittest.TestCase):
         ocorrencia_bug = self.empresa.projetos[0].criar_ocorrencia(
             tipo=TipoOcorrencia.BUG, resumo=resumo, responsavel=funcionario_jasmin
         )
-        self.assertTrue(ocorrencia_bug.estado())
-        self.assertEqual(ocorrencia_bug.tipo(), TipoOcorrencia.BUG)
-        self.assertEqual(ocorrencia_bug.resumo(), resumo)
+        self.assertTrue(ocorrencia_bug.estado)
+        self.assertEqual(ocorrencia_bug.tipo, TipoOcorrencia.BUG)
+        self.assertEqual(ocorrencia_bug.resumo, resumo)
 
-        self.assertEqual(ocorrencia_bug.responsavel(), funcionario_jasmin)
+        self.assertEqual(ocorrencia_bug.responsavel, funcionario_jasmin)
         self.assertEqual(funcionario_jasmin.ocorrencias[0], ocorrencia_bug)
-        self.assertEqual(ocorrencia_bug.projeto(), projeto_cco)
+        self.assertEqual(ocorrencia_bug.projeto, projeto_cco)
         self.assertEqual(projeto_cco.ocorrencias[0], ocorrencia_bug)
