@@ -139,3 +139,127 @@ class Test(unittest.TestCase):
         self.assertEqual(funcionario_jasmin.ocorrencias[0], ocorrencia_bug)
         self.assertEqual(ocorrencia_bug.projeto, projeto_cco.id)
         self.assertEqual(projeto_cco.ocorrencias[0], ocorrencia_bug)
+
+    # Teste 14
+    def test_criar_uma_ocorrencia_tarefa(self):
+        projeto = self.empresa.criar_projeto(nome="Projeto Tarefa")
+        funcionario = self.empresa.criar_funcionario(nome="Carlos")
+        self.empresa.assinar_funcionario_a_projeto(funcionario, projeto)
+        resumo = "Implementar feature X."
+        ocorrencia = projeto.criar_ocorrencia(
+            tipo=TipoOcorrencia.TAREFA,
+            prioridade=PrioridadeOcorrencia.BAIXA,
+            resumo=resumo,
+            responsavel=funcionario.id,
+        )
+        self.assertTrue(ocorrencia.estado)
+        self.assertEqual(ocorrencia.tipo, TipoOcorrencia.TAREFA)
+        self.assertEqual(ocorrencia.resumo, resumo)
+        self.assertEqual(ocorrencia.prioridade, PrioridadeOcorrencia.BAIXA)
+        self.assertEqual(ocorrencia.responsavel, funcionario.id)
+        self.assertEqual(funcionario.ocorrencias[0], ocorrencia)
+        self.assertEqual(ocorrencia.projeto, projeto.id)
+        self.assertEqual(projeto.ocorrencias[0], ocorrencia)
+
+    # Teste 15
+    def test_criar_uma_ocorrencia_refatoracao(self):
+        projeto = self.empresa.criar_projeto(nome="Projeto Refatoracao")
+        funcionario = self.empresa.criar_funcionario(nome="Maria")
+        self.empresa.assinar_funcionario_a_projeto(funcionario, projeto)
+        resumo = "Refatorar modulo Y."
+        ocorrencia = projeto.criar_ocorrencia(
+            tipo=TipoOcorrencia.REFATORACAO,
+            prioridade=PrioridadeOcorrencia.ALTA,
+            resumo=resumo,
+            responsavel=funcionario.id,
+        )
+        self.assertTrue(ocorrencia.estado)
+        self.assertEqual(ocorrencia.tipo, TipoOcorrencia.REFATORACAO)
+        self.assertEqual(ocorrencia.resumo, resumo)
+        self.assertEqual(ocorrencia.prioridade, PrioridadeOcorrencia.ALTA)
+        self.assertEqual(ocorrencia.responsavel, funcionario.id)
+        self.assertEqual(funcionario.ocorrencias[0], ocorrencia)
+        self.assertEqual(ocorrencia.projeto, projeto.id)
+        self.assertEqual(projeto.ocorrencias[0], ocorrencia)
+
+    # Teste 16
+    def test_criar_multiplas_ocorrencias(self):
+        projeto = self.empresa.criar_projeto(nome="Projeto Multi Bug")
+        funcionario = self.empresa.criar_funcionario(nome="Jose")
+        self.empresa.assinar_funcionario_a_projeto(funcionario, projeto)
+        oc_bug = projeto.criar_ocorrencia(
+            tipo=TipoOcorrencia.BUG,
+            prioridade=PrioridadeOcorrencia.ALTA,
+            resumo="Bug tenebroso",
+            responsavel=funcionario.id,
+        )
+        oc_tarefa = projeto.criar_ocorrencia(
+            tipo=TipoOcorrencia.TAREFA,
+            prioridade=PrioridadeOcorrencia.MEDIA,
+            resumo="Corrigir o bug tenebroso",
+            responsavel=funcionario.id,
+        )
+        oc_refatoracao = projeto.criar_ocorrencia(
+            tipo=TipoOcorrencia.REFATORACAO,
+            prioridade=PrioridadeOcorrencia.BAIXA,
+            resumo="Refatorar código ao redor do bug tenebroso",
+            responsavel=funcionario.id,
+        )
+        self.assertEqual(len(projeto.ocorrencias), 3)
+        self.assertEqual(projeto.ocorrencias[0], oc_bug)
+        self.assertEqual(projeto.ocorrencias[1], oc_tarefa)
+        self.assertEqual(projeto.ocorrencias[2], oc_refatoracao)
+        self.assertEqual(len(funcionario.ocorrencias), 3)
+        self.assertEqual(funcionario.ocorrencias[0], oc_bug)
+        self.assertEqual(funcionario.ocorrencias[1], oc_tarefa)
+        self.assertEqual(funcionario.ocorrencias[2], oc_refatoracao)
+
+    # Teste 17
+    def test_criar_ocorrencia_tipo_invalido(self):
+        projeto = self.empresa.criar_projeto(nome="Projeto X")
+        funcionario = self.empresa.criar_funcionario(nome="Ana")
+        self.empresa.assinar_funcionario_a_projeto(funcionario, projeto)
+        with self.assertRaises(ValueError):
+            projeto.criar_ocorrencia(
+                tipo="invalido",
+                prioridade=PrioridadeOcorrencia.MEDIA,
+                resumo="Resumo",
+                responsavel=funcionario.id,
+            )
+
+    # Teste 18
+    def test_criar_ocorrencia_prioridade_invalido(self):
+        projeto = self.empresa.criar_projeto(nome="Projeto X")
+        funcionario = self.empresa.criar_funcionario(nome="Ana")
+        self.empresa.assinar_funcionario_a_projeto(funcionario, projeto)
+        with self.assertRaises(ValueError):
+            projeto.criar_ocorrencia(
+                tipo=TipoOcorrencia.BUG,
+                prioridade="invalido",
+                resumo="Resumo",
+                responsavel=funcionario.id,
+            )
+
+    # Teste 19
+    def test_criar_ocorrencia_resumo_invalido(self):
+        projeto = self.empresa.criar_projeto(nome="Projeto X")
+        funcionario = self.empresa.criar_funcionario(nome="Ana")
+        self.empresa.assinar_funcionario_a_projeto(funcionario, projeto)
+        with self.assertRaises(ValueError):
+            projeto.criar_ocorrencia(
+                tipo=TipoOcorrencia.BUG,
+                prioridade=PrioridadeOcorrencia.MEDIA,
+                resumo="",
+                responsavel=funcionario.id,
+            )
+
+    # Teste 20
+    def test_criar_ocorrencia_responsavel_invalido(self):
+        projeto = self.empresa.criar_projeto(nome="Projeto X")
+        with self.assertRaises(ValueError):
+            projeto.criar_ocorrencia(
+                tipo=TipoOcorrencia.BUG,
+                prioridade=PrioridadeOcorrencia.MEDIA,
+                resumo="Resumo",
+                responsavel=9999,
+            )
