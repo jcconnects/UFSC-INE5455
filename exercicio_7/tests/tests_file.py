@@ -4,6 +4,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+from exercicio_7.src.ocorrencia import Ocorrencia, TipoOcorrencia
 from src.empresa import Empresa
 from src.funcionario import Funcionario
 
@@ -114,3 +115,23 @@ class Test(unittest.TestCase):
         self.assertEqual(self.empresa.projetos[2], projeto_hidroaviao)
         self.assertEqual(self.empresa.projetos[3], projeto_quantico)
         self.assertEqual(self.empresa.projetos[4], projeto_espacial)
+
+    # Teste 13
+    def test_criar_uma_ocorrencia_bug(self):
+        projeto_cco = self.empresa.criar_projeto(nome="Projetinho de CCO")
+        funcionario_jasmin = self.empresa.criar_funcionario(nome="Jasmin")
+        self.empresa.assinar_funcionario_a_projeto(
+            funcionario=funcionario_jasmin, projeto=projeto_cco
+        )
+        resumo = "Falha no sistema."
+        ocorrencia_bug = self.empresa.projetos[0].criar_ocorrencia(
+            tipo=TipoOcorrencia.BUG, resumo=resumo, responsavel=funcionario_jasmin
+        )
+        self.assertTrue(ocorrencia_bug.estado())
+        self.assertEqual(ocorrencia_bug.tipo(), TipoOcorrencia.BUG)
+        self.assertEqual(ocorrencia_bug.resumo(), resumo)
+
+        self.assertEqual(ocorrencia_bug.responsavel(), funcionario_jasmin)
+        self.assertEqual(funcionario_jasmin.ocorrencias[0], ocorrencia_bug)
+        self.assertEqual(ocorrencia_bug.projeto(), projeto_cco)
+        self.assertEqual(projeto_cco.ocorrencias[0], ocorrencia_bug)
