@@ -265,3 +265,19 @@ class Test(unittest.TestCase):
                 resumo="Resumo",
                 responsavel=9999,
             )
+
+    # Teste 21
+    def test_mudar_responsavel_de_ocorrencia_aberta(self):
+        projeto = self.empresa.criar_projeto(nome="Projeto 21")
+        funcionario_alice = self.empresa.criar_funcionario(nome="Alice")
+        funcionario_bob = self.empresa.criar_funcionario(nome="Bob")
+        self.empresa.assinar_funcionario_a_projeto(funcionario_alice, projeto)
+        self.empresa.assinar_funcionario_a_projeto(funcionario_bob, projeto)
+        ocorrencia = projeto.criar_ocorrencia(
+            tipo=TipoOcorrencia.BUG,
+            prioridade=PrioridadeOcorrencia.MEDIA,
+            resumo="Bug aberto",
+            responsavel=funcionario_alice.id,
+        )
+        ocorrencia.mudar_responsavel(funcionario_bob.id)
+        self.assertEqual(ocorrencia.responsavel, funcionario_bob.id)
