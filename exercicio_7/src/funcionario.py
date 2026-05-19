@@ -3,3 +3,4 @@ class Funcionario:
         self.id = id
         self.nome = nome
         self.projetos = []
+        self.ocorrencias = []

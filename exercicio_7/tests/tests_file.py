@@ -4,7 +4,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from exercicio_7.src.ocorrencia import Ocorrencia, TipoOcorrencia
+from src.ocorrencia import Ocorrencia, TipoOcorrencia, PrioridadeOcorrencia
 from src.empresa import Empresa
 from src.funcionario import Funcionario
 
