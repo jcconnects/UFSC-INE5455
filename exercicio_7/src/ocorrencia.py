@@ -1,14 +1,17 @@
 from enum import Enum
 
+
 class TipoOcorrencia(Enum):
     TAREFA = 0
     BUG = 1
     REFATORACAO = 2
 
+
 class PrioridadeOcorrencia(Enum):
     BAIXA = 0
     MEDIA = 1
     ALTA = 2
+
 
 class Ocorrencia:
     def __init__(self, id, tipo, prioridade, resumo, responsavel, projeto) -> None:
@@ -18,4 +21,9 @@ class Ocorrencia:
         self.resumo = resumo
         self.responsavel = responsavel
         self.projeto = projeto
-        self.estado = True       # Aberta por padrão
+        self.estado = True  # Aberta por padrão
+
+    def mudar_responsavel(self, novo_responsavel):
+        if not self.estado:
+            raise ValueError("Não é possível mudar responsável de ocorrência fechada.")
+        self.responsavel = novo_responsavel
