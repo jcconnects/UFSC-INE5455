@@ -15,8 +15,10 @@ class Projeto:
             raise ValueError("Prioridade de ocorrência inválida.")
         if not resumo:
             raise ValueError("O resumo da ocorrência não pode ser vazio.")
-        if not any(f.id == responsavel for f in self.funcionarios):
+        if responsavel not in self.funcionarios:
             raise ValueError("Funcionário responsável não está associado ao projeto.")
+        if len(responsavel.ocorrencias) >= 10:
+            raise ValueError("O funcionário responsável já tem 10 ocorrências atribuídas.")
 
         ocorrencia = Ocorrencia(
             id=len(self.ocorrencias) + 1,
@@ -24,11 +26,11 @@ class Projeto:
             prioridade=prioridade,
             resumo=resumo,
             responsavel=responsavel,
-            projeto=self.id
+            projeto=self
         )
         self.ocorrencias.append(ocorrencia)
 
-        funcionario = next((f for f in self.funcionarios if f.id == responsavel), None)
+        funcionario = next((f for f in self.funcionarios if f == responsavel), None)
         funcionario.ocorrencias.append(ocorrencia)
 
         return ocorrencia

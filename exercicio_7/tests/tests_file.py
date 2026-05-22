@@ -128,16 +128,16 @@ class Test(unittest.TestCase):
             tipo=TipoOcorrencia.BUG,
             prioridade=PrioridadeOcorrencia.MEDIA,
             resumo=resumo,
-            responsavel=funcionario_jasmin.id,
+            responsavel=funcionario_jasmin,
         )
         self.assertTrue(ocorrencia_bug.estado)
         self.assertEqual(ocorrencia_bug.tipo, TipoOcorrencia.BUG)
         self.assertEqual(ocorrencia_bug.resumo, resumo)
         self.assertEqual(ocorrencia_bug.prioridade, PrioridadeOcorrencia.MEDIA)
 
-        self.assertEqual(ocorrencia_bug.responsavel, funcionario_jasmin.id)
+        self.assertEqual(ocorrencia_bug.responsavel, funcionario_jasmin)
         self.assertEqual(funcionario_jasmin.ocorrencias[0], ocorrencia_bug)
-        self.assertEqual(ocorrencia_bug.projeto, projeto_cco.id)
+        self.assertEqual(ocorrencia_bug.projeto, projeto_cco)
         self.assertEqual(projeto_cco.ocorrencias[0], ocorrencia_bug)
 
     # Teste 14
@@ -150,15 +150,15 @@ class Test(unittest.TestCase):
             tipo=TipoOcorrencia.TAREFA,
             prioridade=PrioridadeOcorrencia.BAIXA,
             resumo=resumo,
-            responsavel=funcionario.id,
+            responsavel=funcionario,
         )
         self.assertTrue(ocorrencia.estado)
         self.assertEqual(ocorrencia.tipo, TipoOcorrencia.TAREFA)
         self.assertEqual(ocorrencia.resumo, resumo)
         self.assertEqual(ocorrencia.prioridade, PrioridadeOcorrencia.BAIXA)
-        self.assertEqual(ocorrencia.responsavel, funcionario.id)
+        self.assertEqual(ocorrencia.responsavel, funcionario)
         self.assertEqual(funcionario.ocorrencias[0], ocorrencia)
-        self.assertEqual(ocorrencia.projeto, projeto.id)
+        self.assertEqual(ocorrencia.projeto, projeto)
         self.assertEqual(projeto.ocorrencias[0], ocorrencia)
 
     # Teste 15
@@ -171,15 +171,15 @@ class Test(unittest.TestCase):
             tipo=TipoOcorrencia.REFATORACAO,
             prioridade=PrioridadeOcorrencia.ALTA,
             resumo=resumo,
-            responsavel=funcionario.id,
+            responsavel=funcionario,
         )
         self.assertTrue(ocorrencia.estado)
         self.assertEqual(ocorrencia.tipo, TipoOcorrencia.REFATORACAO)
         self.assertEqual(ocorrencia.resumo, resumo)
         self.assertEqual(ocorrencia.prioridade, PrioridadeOcorrencia.ALTA)
-        self.assertEqual(ocorrencia.responsavel, funcionario.id)
+        self.assertEqual(ocorrencia.responsavel, funcionario)
         self.assertEqual(funcionario.ocorrencias[0], ocorrencia)
-        self.assertEqual(ocorrencia.projeto, projeto.id)
+        self.assertEqual(ocorrencia.projeto, projeto)
         self.assertEqual(projeto.ocorrencias[0], ocorrencia)
 
     # Teste 16
@@ -191,19 +191,19 @@ class Test(unittest.TestCase):
             tipo=TipoOcorrencia.BUG,
             prioridade=PrioridadeOcorrencia.ALTA,
             resumo="Bug tenebroso",
-            responsavel=funcionario.id,
+            responsavel=funcionario,
         )
         oc_tarefa = projeto.criar_ocorrencia(
             tipo=TipoOcorrencia.TAREFA,
             prioridade=PrioridadeOcorrencia.MEDIA,
             resumo="Corrigir o bug tenebroso",
-            responsavel=funcionario.id,
+            responsavel=funcionario,
         )
         oc_refatoracao = projeto.criar_ocorrencia(
             tipo=TipoOcorrencia.REFATORACAO,
             prioridade=PrioridadeOcorrencia.BAIXA,
             resumo="Refatorar código ao redor do bug tenebroso",
-            responsavel=funcionario.id,
+            responsavel=funcionario,
         )
         self.assertEqual(len(projeto.ocorrencias), 3)
         self.assertEqual(projeto.ocorrencias[0], oc_bug)
@@ -224,7 +224,7 @@ class Test(unittest.TestCase):
                 tipo="invalido",
                 prioridade=PrioridadeOcorrencia.MEDIA,
                 resumo="Resumo",
-                responsavel=funcionario.id,
+                responsavel=funcionario,
             )
 
     # Teste 18
@@ -237,7 +237,7 @@ class Test(unittest.TestCase):
                 tipo=TipoOcorrencia.BUG,
                 prioridade="invalido",
                 resumo="Resumo",
-                responsavel=funcionario.id,
+                responsavel=funcionario,
             )
 
     # Teste 19
@@ -250,7 +250,7 @@ class Test(unittest.TestCase):
                 tipo=TipoOcorrencia.BUG,
                 prioridade=PrioridadeOcorrencia.MEDIA,
                 resumo="",
-                responsavel=funcionario.id,
+                responsavel=funcionario,
             )
 
     # Teste 20
@@ -277,10 +277,10 @@ class Test(unittest.TestCase):
             tipo=TipoOcorrencia.BUG,
             prioridade=PrioridadeOcorrencia.MEDIA,
             resumo="Bug aberto",
-            responsavel=funcionario_alice.id,
+            responsavel=funcionario_alice,
         )
-        ocorrencia.mudar_responsavel(funcionario_bob.id)
-        self.assertEqual(ocorrencia.responsavel, funcionario_bob.id)
+        ocorrencia.mudar_responsavel(funcionario_bob)
+        self.assertEqual(ocorrencia.responsavel, funcionario_bob)
 
     # Teste 22
     def test_mudar_responsavel_de_ocorrencia_fechada(self):
@@ -293,11 +293,11 @@ class Test(unittest.TestCase):
             tipo=TipoOcorrencia.BUG,
             prioridade=PrioridadeOcorrencia.MEDIA,
             resumo="Bug fechado",
-            responsavel=funcionario_carlos.id,
+            responsavel=funcionario_carlos,
         )
         ocorrencia.fechar()
         with self.assertRaises(ValueError):
-            ocorrencia.mudar_responsavel(funcionario_diana.id)
+            ocorrencia.mudar_responsavel(funcionario_diana)
 
     # Teste 23
     def test_modificar_prioridade_de_ocorrencia_aberta(self):
@@ -308,7 +308,7 @@ class Test(unittest.TestCase):
             tipo=TipoOcorrencia.TAREFA,
             prioridade=PrioridadeOcorrencia.BAIXA,
             resumo="Tarefa aberta",
-            responsavel=funcionario_eva.id,
+            responsavel=funcionario_eva,
         )
         ocorrencia.modificar_prioridade(PrioridadeOcorrencia.ALTA)
         self.assertEqual(ocorrencia.prioridade, PrioridadeOcorrencia.ALTA)
@@ -322,7 +322,7 @@ class Test(unittest.TestCase):
             tipo=TipoOcorrencia.TAREFA,
             prioridade=PrioridadeOcorrencia.BAIXA,
             resumo="Tarefa fechada",
-            responsavel=funcionario_fred.id,
+            responsavel=funcionario_fred,
         )
         ocorrencia.fechar()
         with self.assertRaises(ValueError):
@@ -337,7 +337,7 @@ class Test(unittest.TestCase):
             tipo=TipoOcorrencia.BUG,
             prioridade=PrioridadeOcorrencia.ALTA,
             resumo="Bug para fechar",
-            responsavel=funcionario_gabi.id,
+            responsavel=funcionario_gabi,
         )
         ocorrencia.fechar()
         self.assertFalse(ocorrencia.estado)
@@ -351,7 +351,7 @@ class Test(unittest.TestCase):
             tipo=TipoOcorrencia.BUG,
             prioridade=PrioridadeOcorrencia.ALTA,
             resumo="Bug ja fechado",
-            responsavel=funcionario_hugo.id,
+            responsavel=funcionario_hugo,
         )
         ocorrencia.fechar()
         with self.assertRaises(ValueError):
@@ -377,7 +377,7 @@ class Test(unittest.TestCase):
             tipo=TipoOcorrencia.BUG,
             prioridade=PrioridadeOcorrencia.MEDIA,
             resumo="Bug com responsavel",
-            responsavel=funcionario.id,
+            responsavel=funcionario,
         )
         with self.assertRaises(ValueError):
             ocorrencia.mudar_responsavel(None)
@@ -391,7 +391,7 @@ class Test(unittest.TestCase):
                 tipo=TipoOcorrencia.BUG,
                 prioridade=PrioridadeOcorrencia.MEDIA,
                 resumo="Bug com responsavel nao associado",
-                responsavel=funcionario_lucas.id,
+                responsavel=funcionario_lucas,
             )
     
     # Teste 30
@@ -404,10 +404,10 @@ class Test(unittest.TestCase):
             tipo=TipoOcorrencia.BUG,
             prioridade=PrioridadeOcorrencia.MEDIA,
             resumo="Bug para mudar responsavel",
-            responsavel=funcionario_maria.id,
+            responsavel=funcionario_maria,
         )
         with self.assertRaises(ValueError):
-            ocorrencia.mudar_responsavel(funcionario_joao.id)
+            ocorrencia.mudar_responsavel(funcionario_joao)
 
     # Teste 31
     def test_criar_ocorrencia_com_responsavel_com_mais_de_10_ocorrencias(self):
@@ -419,14 +419,14 @@ class Test(unittest.TestCase):
                 tipo=TipoOcorrencia.BUG,
                 prioridade=PrioridadeOcorrencia.MEDIA,
                 resumo=f"Bug {i+1}",
-                responsavel=funcionario_ana.id,
+                responsavel=funcionario_ana,
             )
         with self.assertRaises(ValueError):
             projeto_31.criar_ocorrencia(
                 tipo=TipoOcorrencia.BUG,
                 prioridade=PrioridadeOcorrencia.MEDIA,
                 resumo="Bug 11",
-                responsavel=funcionario_ana.id,
+                responsavel=funcionario_ana,
             )
 
     # Teste 32
@@ -441,13 +441,13 @@ class Test(unittest.TestCase):
                 tipo=TipoOcorrencia.BUG,
                 prioridade=PrioridadeOcorrencia.MEDIA,
                 resumo=f"Bug {i+1}",
-                responsavel=funcionario_carlos.id,
+                responsavel=funcionario_carlos,
             )
         ocorrencia = projeto_32.criar_ocorrencia(
             tipo=TipoOcorrencia.BUG,
             prioridade=PrioridadeOcorrencia.MEDIA,
             resumo="Bug para mudar responsavel",
-            responsavel=funcionario_diana.id,
+            responsavel=funcionario_diana,
         )
         with self.assertRaises(ValueError):
-            ocorrencia.mudar_responsavel(funcionario_carlos.id)
+            ocorrencia.mudar_responsavel(funcionario_carlos)
