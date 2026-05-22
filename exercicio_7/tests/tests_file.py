@@ -80,12 +80,12 @@ class Test(unittest.TestCase):
         projeto_iot = self.empresa.criar_projeto(nome="IoT")
         projeto_tdd = self.empresa.criar_projeto(nome="TDD")
         self.empresa.assinar_funcionario_a_projeto(funcionario_carlos, projeto_iot)
-        self.empresa.assinar_funcionario_a_projeto(funcionario_jose, projeto_tdd)
-        self.empresa.assinar_funcionario_a_projeto(funcionario_carlos, projeto_iot)
+        self.empresa.assinar_funcionario_a_projeto(funcionario_jose, projeto_iot)
+        self.empresa.assinar_funcionario_a_projeto(funcionario_carlos, projeto_tdd)
         self.empresa.assinar_funcionario_a_projeto(funcionario_jose, projeto_tdd)
         self.assertTrue(funcionario_carlos in projeto_iot.funcionarios)
-        self.assertTrue(funcionario_jose in projeto_tdd.funcionarios)
-        self.assertTrue(funcionario_carlos in projeto_iot.funcionarios)
+        self.assertTrue(funcionario_jose in projeto_iot.funcionarios)
+        self.assertTrue(funcionario_carlos in projeto_tdd.funcionarios)
         self.assertTrue(funcionario_jose in projeto_tdd.funcionarios)
 
     # Teste 11
@@ -508,3 +508,26 @@ class Test(unittest.TestCase):
         self.assertEqual(nova_ocorrencia.responsavel, funcionario_carlos)
         self.assertEqual(funcionario_diana.ocorrencias, [])
         self.assertEqual(funcionario_carlos.ocorrencias[10], nova_ocorrencia)
+
+    # Teste 35
+    def test_assinar_funcionario_duplicado_a_projeto(self):
+        funcionario_laura = self.empresa.criar_funcionario(nome="Laura")
+        projeto_unico = self.empresa.criar_projeto(nome="Projeto Unico")
+        self.empresa.assinar_funcionario_a_projeto(funcionario_laura, projeto_unico)
+        with self.assertRaises(ValueError):
+            self.empresa.assinar_funcionario_a_projeto(funcionario_laura, projeto_unico)
+
+    # Teste 36
+    def test_assinar_funcionario_a_projeto_inexistente(self):
+        funcionario_ricardo = self.empresa.criar_funcionario(nome="Ricardo")
+        projeto_inexistente = "Projeto Inexistente"
+        with self.assertRaises(ValueError):
+            self.empresa.assinar_funcionario_a_projeto(funcionario_ricardo, projeto_inexistente)
+    
+    # Teste 37
+    def test_assinar_funcionario_inexistente_a_projeto(self):
+        funcionario_inexistente = "Funcionario Inexistente"
+        projeto_unico = self.empresa.criar_projeto(nome="Projeto Unico")
+        with self.assertRaises(ValueError):
+            self.empresa.assinar_funcionario_a_projeto(funcionario_inexistente, projeto_unico)
+
