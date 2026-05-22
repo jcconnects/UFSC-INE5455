@@ -31,6 +31,8 @@ class Ocorrencia:
     def mudar_responsavel(self, novo_responsavel):
         if not self.estado:
             raise ValueError("Não é possível mudar responsável de ocorrência fechada.")
+        if novo_responsavel is None:
+            raise ValueError("Novo responsável não pode ser nulo.")
         self.responsavel = novo_responsavel
 
     def modificar_prioridade(self, nova_prioridade):
