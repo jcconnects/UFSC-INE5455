@@ -281,6 +281,8 @@ class Test(unittest.TestCase):
         )
         ocorrencia.mudar_responsavel(funcionario_bob)
         self.assertEqual(ocorrencia.responsavel, funcionario_bob)
+        self.assertEqual(funcionario_alice.ocorrencias, [])
+        self.assertEqual(funcionario_bob.ocorrencias[0], ocorrencia)
 
     # Teste 22
     def test_mudar_responsavel_de_ocorrencia_fechada(self):
@@ -341,6 +343,7 @@ class Test(unittest.TestCase):
         )
         ocorrencia.fechar()
         self.assertFalse(ocorrencia.estado)
+        self.assertEqual(funcionario_gabi.ocorrencias_ativas(), [])
 
     # Teste 26
     def test_fechar_ocorrencia_fechada(self):
@@ -451,3 +454,57 @@ class Test(unittest.TestCase):
         )
         with self.assertRaises(ValueError):
             ocorrencia.mudar_responsavel(funcionario_carlos)
+
+    # Teste 33
+    def test_criar_ocorrencia_para_funcionario_com_10_ocorrencias_fechadas(self):
+        projeto_33 = self.empresa.criar_projeto(nome="Projeto 33")
+        funcionario_ana = self.empresa.criar_funcionario(nome="Ana")
+        self.empresa.assinar_funcionario_a_projeto(funcionario_ana, projeto_33)
+        for i in range(10):
+            ocorrencia = projeto_33.criar_ocorrencia(
+                tipo=TipoOcorrencia.BUG,
+                prioridade=PrioridadeOcorrencia.MEDIA,
+                resumo=f"Bug {i+1}",
+                responsavel=funcionario_ana,
+            )
+            ocorrencia.fechar()
+        nova_ocorrencia = projeto_33.criar_ocorrencia(
+            tipo=TipoOcorrencia.BUG,
+            prioridade=PrioridadeOcorrencia.MEDIA,
+            resumo="Bug 11",
+            responsavel=funcionario_ana,
+        )
+        self.assertTrue(nova_ocorrencia.estado)
+        self.assertEqual(nova_ocorrencia.tipo, TipoOcorrencia.BUG)
+        self.assertEqual(nova_ocorrencia.resumo, "Bug 11")
+        self.assertEqual(nova_ocorrencia.prioridade, PrioridadeOcorrencia.MEDIA)
+        self.assertEqual(nova_ocorrencia.responsavel, funcionario_ana)
+        self.assertEqual(funcionario_ana.ocorrencias[10], nova_ocorrencia)
+        self.assertEqual(nova_ocorrencia.projeto, projeto_33)
+        self.assertEqual(projeto_33.ocorrencias[10], nova_ocorrencia)
+
+    # Teste 34
+    def test_mudar_ocorrencia_para_funcionario_com_10_ocorrencias_fechadas(self):
+        projeto_34 = self.empresa.criar_projeto(nome="Projeto 34")
+        funcionario_carlos = self.empresa.criar_funcionario(nome="Carlos")
+        funcionario_diana = self.empresa.criar_funcionario(nome="Diana")
+        self.empresa.assinar_funcionario_a_projeto(funcionario_carlos, projeto_34)
+        self.empresa.assinar_funcionario_a_projeto(funcionario_diana, projeto_34)
+        for i in range(10):
+            ocorrencia = projeto_34.criar_ocorrencia(
+                tipo=TipoOcorrencia.BUG,
+                prioridade=PrioridadeOcorrencia.MEDIA,
+                resumo=f"Bug {i+1}",
+                responsavel=funcionario_carlos,
+            )
+            ocorrencia.fechar()
+        nova_ocorrencia = projeto_34.criar_ocorrencia(
+            tipo=TipoOcorrencia.BUG,
+            prioridade=PrioridadeOcorrencia.MEDIA,
+            resumo="Bug para mudar responsavel",
+            responsavel=funcionario_diana,
+        )
+        nova_ocorrencia.mudar_responsavel(funcionario_carlos)
+        self.assertEqual(nova_ocorrencia.responsavel, funcionario_carlos)
+        self.assertEqual(funcionario_diana.ocorrencias, [])
+        self.assertEqual(funcionario_carlos.ocorrencias[10], nova_ocorrencia)
