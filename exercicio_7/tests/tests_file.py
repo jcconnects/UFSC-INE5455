@@ -381,3 +381,73 @@ class Test(unittest.TestCase):
         )
         with self.assertRaises(ValueError):
             ocorrencia.mudar_responsavel(None)
+
+    # Teste 29 
+    def test_criar_ocorrencia_com_responsavel_nao_associado_ao_projeto(self):
+        projeto_29 = self.empresa.criar_projeto(nome="Projeto 29")
+        funcionario_lucas = self.empresa.criar_funcionario(nome="Lucas")
+        with self.assertRaises(ValueError):
+            projeto_29.criar_ocorrencia(
+                tipo=TipoOcorrencia.BUG,
+                prioridade=PrioridadeOcorrencia.MEDIA,
+                resumo="Bug com responsavel nao associado",
+                responsavel=funcionario_lucas.id,
+            )
+    
+    # Teste 30
+    def test_mudar_responsavel_de_ocorrencia_para_funcionario_nao_associado_ao_projeto(self):
+        projeto_30 = self.empresa.criar_projeto(nome="Projeto 30")
+        funcionario_maria = self.empresa.criar_funcionario(nome="Maria")
+        funcionario_joao = self.empresa.criar_funcionario(nome="João")
+        self.empresa.assinar_funcionario_a_projeto(funcionario_maria, projeto_30)
+        ocorrencia = projeto_30.criar_ocorrencia(
+            tipo=TipoOcorrencia.BUG,
+            prioridade=PrioridadeOcorrencia.MEDIA,
+            resumo="Bug para mudar responsavel",
+            responsavel=funcionario_maria.id,
+        )
+        with self.assertRaises(ValueError):
+            ocorrencia.mudar_responsavel(funcionario_joao.id)
+
+    # Teste 31
+    def test_criar_ocorrencia_com_responsavel_com_mais_de_10_ocorrencias(self):
+        projeto_31 = self.empresa.criar_projeto(nome="Projeto 31")
+        funcionario_ana = self.empresa.criar_funcionario(nome="Ana")
+        self.empresa.assinar_funcionario_a_projeto(funcionario_ana, projeto_31)
+        for i in range(10):
+            projeto_31.criar_ocorrencia(
+                tipo=TipoOcorrencia.BUG,
+                prioridade=PrioridadeOcorrencia.MEDIA,
+                resumo=f"Bug {i+1}",
+                responsavel=funcionario_ana.id,
+            )
+        with self.assertRaises(ValueError):
+            projeto_31.criar_ocorrencia(
+                tipo=TipoOcorrencia.BUG,
+                prioridade=PrioridadeOcorrencia.MEDIA,
+                resumo="Bug 11",
+                responsavel=funcionario_ana.id,
+            )
+
+    # Teste 32
+    def test_mudar_responsavel_de_ocorrencia_para_funcionario_com_mais_de_10_ocorrencias(self):
+        projeto_32 = self.empresa.criar_projeto(nome="Projeto 32")
+        funcionario_carlos = self.empresa.criar_funcionario(nome="Carlos")
+        funcionario_diana = self.empresa.criar_funcionario(nome="Diana")
+        self.empresa.assinar_funcionario_a_projeto(funcionario_carlos, projeto_32)
+        self.empresa.assinar_funcionario_a_projeto(funcionario_diana, projeto_32)
+        for i in range(10):
+            projeto_32.criar_ocorrencia(
+                tipo=TipoOcorrencia.BUG,
+                prioridade=PrioridadeOcorrencia.MEDIA,
+                resumo=f"Bug {i+1}",
+                responsavel=funcionario_carlos.id,
+            )
+        ocorrencia = projeto_32.criar_ocorrencia(
+            tipo=TipoOcorrencia.BUG,
+            prioridade=PrioridadeOcorrencia.MEDIA,
+            resumo="Bug para mudar responsavel",
+            responsavel=funcionario_diana.id,
+        )
+        with self.assertRaises(ValueError):
+            ocorrencia.mudar_responsavel(funcionario_carlos.id)
