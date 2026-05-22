@@ -17,7 +17,7 @@ class Projeto:
             raise ValueError("O resumo da ocorrência não pode ser vazio.")
         if responsavel not in self.funcionarios:
             raise ValueError("Funcionário responsável não está associado ao projeto.")
-        if len(responsavel.ocorrencias) >= 10:
+        if len(responsavel.ocorrencias_ativas()) >= 10:
             raise ValueError("O funcionário responsável já tem 10 ocorrências atribuídas.")
 
         ocorrencia = Ocorrencia(

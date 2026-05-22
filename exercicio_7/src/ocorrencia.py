@@ -33,11 +33,14 @@ class Ocorrencia:
             raise ValueError("Não é possível mudar responsável de ocorrência fechada.")
         if novo_responsavel is None:
             raise ValueError("Novo responsável não pode ser nulo.")
-        if len(novo_responsavel.ocorrencias) >= 10:
+        if len(novo_responsavel.ocorrencias_ativas()) >= 10:
             raise ValueError("O novo responsável já tem 10 ocorrências atribuídas.")
         if novo_responsavel not in self.projeto.funcionarios:
             raise ValueError("Novo responsável não está associado ao projeto da ocorrência.")
+        
+        self.responsavel.ocorrencias.remove(self)
         self.responsavel = novo_responsavel
+        novo_responsavel.ocorrencias.append(self)
 
     def modificar_prioridade(self, nova_prioridade):
         if not self.estado:

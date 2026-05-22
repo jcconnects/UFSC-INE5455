@@ -4,3 +4,6 @@ class Funcionario:
         self.nome = nome
         self.projetos = []
         self.ocorrencias = []
+
+    def ocorrencias_ativas(self):
+        return [o for o in self.ocorrencias if o.estado]
