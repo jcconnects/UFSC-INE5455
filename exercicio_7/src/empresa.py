@@ -26,7 +26,13 @@ class Empresa:
     def assinar_funcionario_a_projeto(self, funcionario, projeto):
         funcionario = next((f for f in self.funcionarios if f.id == funcionario.id), None)
         projeto = next((p for p in self.projetos if p.id == projeto.id), None)
+        
+        if funcionario is None:
+            raise ValueError("Funcionário não encontrado na empresa.")
+        if projeto is None:
+            raise ValueError("Projeto não encontrado na empresa.")
+        if funcionario in projeto.funcionarios:
+            raise ValueError("Funcionário já está associado ao projeto.")
 
         projeto.funcionarios.append(funcionario)
         funcionario.projetos.append(projeto)
-
