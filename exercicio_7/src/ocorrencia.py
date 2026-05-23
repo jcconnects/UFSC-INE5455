@@ -49,4 +49,6 @@ class Ocorrencia:
             raise ValueError(
                 "Não é possível modificar prioridade de ocorrência fechada."
             )
+        if nova_prioridade not in PrioridadeOcorrencia:
+            raise ValueError("Prioridade de ocorrência inválida.")
         self.prioridade = nova_prioridade
