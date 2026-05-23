@@ -538,3 +538,74 @@ class Test(unittest.TestCase):
             self.empresa.assinar_funcionario_a_projeto(
                 funcionario_inexistente, projeto_unico
             )
+
+    # Teste 38
+    def test_ocorrencias_ativas_retorna_apenas_abertas(self):
+        projeto = self.empresa.criar_projeto(nome="Projeto 38")
+        funcionario_nina = self.empresa.criar_funcionario(nome="Nina")
+        self.empresa.assinar_funcionario_a_projeto(funcionario_nina, projeto)
+        ocorrencia_aberta = projeto.criar_ocorrencia(
+            tipo=TipoOcorrencia.BUG,
+            prioridade=PrioridadeOcorrencia.ALTA,
+            resumo="Bug aberto",
+            responsavel=funcionario_nina,
+        )
+        ocorrencia_fechada = projeto.criar_ocorrencia(
+            tipo=TipoOcorrencia.TAREFA,
+            prioridade=PrioridadeOcorrencia.BAIXA,
+            resumo="Tarefa fechada",
+            responsavel=funcionario_nina,
+        )
+        ocorrencia_fechada.fechar()
+        self.assertEqual(funcionario_nina.ocorrencias_ativas(), [ocorrencia_aberta])
+        self.assertEqual(len(funcionario_nina.ocorrencias), 2)
+
+    # Teste 39
+    def test_modificar_prioridade_com_valor_invalido(self):
+        projeto = self.empresa.criar_projeto(nome="Projeto 39")
+        funcionario_otto = self.empresa.criar_funcionario(nome="Otto")
+        self.empresa.assinar_funcionario_a_projeto(funcionario_otto, projeto)
+        ocorrencia = projeto.criar_ocorrencia(
+            tipo=TipoOcorrencia.BUG,
+            prioridade=PrioridadeOcorrencia.MEDIA,
+            resumo="Bug para prioridade invalida",
+            responsavel=funcionario_otto,
+        )
+        with self.assertRaises(ValueError):
+            ocorrencia.modificar_prioridade("invalido")
+
+    # Teste 40
+    def test_limite_10_ocorrencias_abertas_com_dois_projetos(self):
+        projeto_a = self.empresa.criar_projeto(nome="Projeto A")
+        projeto_b = self.empresa.criar_projeto(nome="Projeto B")
+        funcionario_pedro = self.empresa.criar_funcionario(nome="Pedro")
+        self.empresa.assinar_funcionario_a_projeto(funcionario_pedro, projeto_a)
+        self.empresa.assinar_funcionario_a_projeto(funcionario_pedro, projeto_b)
+        for i in range(9):
+            projeto_a.criar_ocorrencia(
+                tipo=TipoOcorrencia.BUG,
+                prioridade=PrioridadeOcorrencia.MEDIA,
+                resumo=f"Bug {i+1} projeto A",
+                responsavel=funcionario_pedro,
+            )
+        projeto_b.criar_ocorrencia(
+            tipo=TipoOcorrencia.BUG,
+            prioridade=PrioridadeOcorrencia.MEDIA,
+            resumo="Bug 10 projeto B",
+            responsavel=funcionario_pedro,
+        )
+        self.assertEqual(len(funcionario_pedro.ocorrencias_ativas()), 10)
+        with self.assertRaises(ValueError):
+            projeto_a.criar_ocorrencia(
+                tipo=TipoOcorrencia.BUG,
+                prioridade=PrioridadeOcorrencia.MEDIA,
+                resumo="Bug 11 projeto A",
+                responsavel=funcionario_pedro,
+            )
+        with self.assertRaises(ValueError):
+            projeto_b.criar_ocorrencia(
+                tipo=TipoOcorrencia.BUG,
+                prioridade=PrioridadeOcorrencia.MEDIA,
+                resumo="Bug 11 projeto B",
+                responsavel=funcionario_pedro,
+            )
