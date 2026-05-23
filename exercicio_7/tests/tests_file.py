@@ -19,6 +19,8 @@ class Test(unittest.TestCase):
         empresa = Empresa(nome="WEG")
         self.assertIsInstance(empresa, Empresa)
         self.assertEqual(empresa.nome, "WEG")
+        self.assertEqual(empresa.funcionarios, [])
+        self.assertEqual(empresa.projetos, [])
 
     # Teste 02
     def test_criar_um_funcionario(self):
@@ -87,6 +89,10 @@ class Test(unittest.TestCase):
         self.assertTrue(funcionario_jose in projeto_iot.funcionarios)
         self.assertTrue(funcionario_carlos in projeto_tdd.funcionarios)
         self.assertTrue(funcionario_jose in projeto_tdd.funcionarios)
+        self.assertTrue(projeto_iot in funcionario_carlos.projetos)
+        self.assertTrue(projeto_tdd in funcionario_carlos.projetos)
+        self.assertTrue(projeto_iot in funcionario_jose.projetos)
+        self.assertTrue(projeto_tdd in funcionario_jose.projetos)
 
     # Teste 11
     def test_criar_varios_funcionarios(self):
@@ -213,6 +219,12 @@ class Test(unittest.TestCase):
         self.assertEqual(funcionario.ocorrencias[0], oc_bug)
         self.assertEqual(funcionario.ocorrencias[1], oc_tarefa)
         self.assertEqual(funcionario.ocorrencias[2], oc_refatoracao)
+        self.assertNotEqual(oc_bug.id, oc_tarefa.id)
+        self.assertNotEqual(oc_tarefa.id, oc_refatoracao.id)
+        self.assertNotEqual(oc_bug.id, oc_refatoracao.id)
+        self.assertEqual(oc_bug.projeto, projeto)
+        self.assertEqual(oc_tarefa.projeto, projeto)
+        self.assertEqual(oc_refatoracao.projeto, projeto)
 
     # Teste 17
     def test_criar_ocorrencia_tipo_invalido(self):
