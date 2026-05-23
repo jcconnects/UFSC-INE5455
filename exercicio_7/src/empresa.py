@@ -1,6 +1,7 @@
-
 from funcionario import Funcionario
 from projeto import Projeto
+
+
 class Empresa:
     def __init__(self, nome) -> None:
         if not nome:
@@ -24,9 +25,11 @@ class Empresa:
         return projeto
 
     def assinar_funcionario_a_projeto(self, funcionario, projeto):
-        funcionario = next((f for f in self.funcionarios if f.id == funcionario.id), None)
+        funcionario = next(
+            (f for f in self.funcionarios if f.id == funcionario.id), None
+        )
         projeto = next((p for p in self.projetos if p.id == projeto.id), None)
-        
+
         if funcionario is None:
             raise ValueError("Funcionário não encontrado na empresa.")
         if projeto is None:

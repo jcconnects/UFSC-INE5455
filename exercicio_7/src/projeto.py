@@ -7,7 +7,7 @@ class Projeto:
         self.nome = nome
         self.funcionarios = []
         self.ocorrencias = []
-    
+
     def criar_ocorrencia(self, tipo, prioridade, resumo, responsavel):
         if tipo not in TipoOcorrencia:
             raise ValueError("Tipo de ocorrência inválido.")
@@ -18,7 +18,9 @@ class Projeto:
         if responsavel not in self.funcionarios:
             raise ValueError("Funcionário responsável não está associado ao projeto.")
         if len(responsavel.ocorrencias_ativas()) >= 10:
-            raise ValueError("O funcionário responsável já tem 10 ocorrências atribuídas.")
+            raise ValueError(
+                "O funcionário responsável já tem 10 ocorrências atribuídas."
+            )
 
         ocorrencia = Ocorrencia(
             id=len(self.ocorrencias) + 1,
@@ -26,7 +28,7 @@ class Projeto:
             prioridade=prioridade,
             resumo=resumo,
             responsavel=responsavel,
-            projeto=self
+            projeto=self,
         )
         self.ocorrencias.append(ocorrencia)
 

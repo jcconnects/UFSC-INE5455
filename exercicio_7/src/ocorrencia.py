@@ -36,8 +36,10 @@ class Ocorrencia:
         if len(novo_responsavel.ocorrencias_ativas()) >= 10:
             raise ValueError("O novo responsável já tem 10 ocorrências atribuídas.")
         if novo_responsavel not in self.projeto.funcionarios:
-            raise ValueError("Novo responsável não está associado ao projeto da ocorrência.")
-        
+            raise ValueError(
+                "Novo responsável não está associado ao projeto da ocorrência."
+            )
+
         self.responsavel.ocorrencias.remove(self)
         self.responsavel = novo_responsavel
         novo_responsavel.ocorrencias.append(self)

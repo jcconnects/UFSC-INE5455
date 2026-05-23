@@ -385,7 +385,7 @@ class Test(unittest.TestCase):
         with self.assertRaises(ValueError):
             ocorrencia.mudar_responsavel(None)
 
-    # Teste 29 
+    # Teste 29
     def test_criar_ocorrencia_com_responsavel_nao_associado_ao_projeto(self):
         projeto_29 = self.empresa.criar_projeto(nome="Projeto 29")
         funcionario_lucas = self.empresa.criar_funcionario(nome="Lucas")
@@ -396,9 +396,11 @@ class Test(unittest.TestCase):
                 resumo="Bug com responsavel nao associado",
                 responsavel=funcionario_lucas,
             )
-    
+
     # Teste 30
-    def test_mudar_responsavel_de_ocorrencia_para_funcionario_nao_associado_ao_projeto(self):
+    def test_mudar_responsavel_de_ocorrencia_para_funcionario_nao_associado_ao_projeto(
+        self,
+    ):
         projeto_30 = self.empresa.criar_projeto(nome="Projeto 30")
         funcionario_maria = self.empresa.criar_funcionario(nome="Maria")
         funcionario_joao = self.empresa.criar_funcionario(nome="João")
@@ -433,7 +435,9 @@ class Test(unittest.TestCase):
             )
 
     # Teste 32
-    def test_mudar_responsavel_de_ocorrencia_para_funcionario_com_mais_de_10_ocorrencias(self):
+    def test_mudar_responsavel_de_ocorrencia_para_funcionario_com_mais_de_10_ocorrencias(
+        self,
+    ):
         projeto_32 = self.empresa.criar_projeto(nome="Projeto 32")
         funcionario_carlos = self.empresa.criar_funcionario(nome="Carlos")
         funcionario_diana = self.empresa.criar_funcionario(nome="Diana")
@@ -522,12 +526,15 @@ class Test(unittest.TestCase):
         funcionario_ricardo = self.empresa.criar_funcionario(nome="Ricardo")
         projeto_inexistente = "Projeto Inexistente"
         with self.assertRaises(ValueError):
-            self.empresa.assinar_funcionario_a_projeto(funcionario_ricardo, projeto_inexistente)
-    
+            self.empresa.assinar_funcionario_a_projeto(
+                funcionario_ricardo, projeto_inexistente
+            )
+
     # Teste 37
     def test_assinar_funcionario_inexistente_a_projeto(self):
         funcionario_inexistente = "Funcionario Inexistente"
         projeto_unico = self.empresa.criar_projeto(nome="Projeto Unico")
         with self.assertRaises(ValueError):
-            self.empresa.assinar_funcionario_a_projeto(funcionario_inexistente, projeto_unico)
-
+            self.empresa.assinar_funcionario_a_projeto(
+                funcionario_inexistente, projeto_unico
+            )

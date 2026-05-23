@@ -7,3 +7,4 @@ class Funcionario:
 
     def ocorrencias_ativas(self):
         return [o for o in self.ocorrencias if o.estado]
+
