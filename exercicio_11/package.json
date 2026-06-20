@@ -1,0 +1,23 @@
+{
+  "name": "exercicio_11",
+  "version": "1.0.0",
+  "description": "Estudo dirigido **INE5455-Testes-32**: testes de aceitação BDD com [Behave](https://behave.readthedocs.io/) (Python + Gherkin) sobre um **smart contract** em Solidity (`ProductSaleContract`), compilado com [py-solc-x](https://pypi.org/project/py-solc-x/) e implantado numa blockchain Ethereum local via [web3.py](https://web3py.readthedocs.io/).",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "ganache": "^7.9.2"
+  },
+  "devDependencies": {
+    "prettier": "^3.8.4",
+    "prettier-plugin-gherkin": "^4.0.0"
+  }
+}
