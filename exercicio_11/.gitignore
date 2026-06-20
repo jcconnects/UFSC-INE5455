@@ -1,0 +1,5 @@
+# Node
+node_modules/
+
+# Solidity build artifact (generated at runtime)
+compiled_code.json
