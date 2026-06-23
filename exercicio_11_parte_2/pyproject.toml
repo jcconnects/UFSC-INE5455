@@ -1,0 +1,21 @@
+[project]
+name = "exercicio-11"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "py-solc-x>=2.0.5",
+    "web3>=7.16.0",
+]
+
+[dependency-groups]
+dev = [
+    "behave>=1.3.3",
+]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+# behave ships no type stubs (no py.typed), so silence the missing-stub noise.
+reportMissingModuleSource = false
+reportMissingTypeStubs = false
+

@@ -1,0 +1,4 @@
+[flake8]
+# behave step files rely on the star-import to expose given/when/then/step.
+per-file-ignores =
+    tests/features/steps/*.py: F403,F405
