@@ -1,50 +1,50 @@
-Feature: Create SC_AAA_BBB Contract
+Feature: Criação do contrato de prestação de serviços entre AAA e BBB
 
-  # Não consegui achar os "poderes" do contrato
-  Background:
-    Given a contratante "AAA Consultoria Empresarial Ltda"
-    And a contratada "BBB Tecnologia Ltda"
-    And data de criação do contrato "10"
-    And data de início do contrato "25"
-    And data de término do contrato "55"
-    And contratada tem obrigação "oblig1" de "Prestar os serviços contratados (cláusula 2.3.I)"
-    And contratada tem obrigação "oblig2" de "Enviar fatura e relatório das horas prestadas (descrição detalhada das atividades e cronograma do projeto) (cláusula 2.3.VII)"
-    And contratante tem obrigação "oblig3" de "Indicar um colaborador responsável pelos contatos de ordem técnica com a Contratada (cláusula 2.5.IV)"
-    And contratante tem obrigação "oblig4" de "Realizar o pagamento de 50% do serviço desenvolvido na assinatura do contrato (cláusula 3.2)"
-    And contratante tem obrigação "oblig5" de "Realizar o pagamento de 50% do serviço desenvolvido trinta dias após o início dos trabalhos (cláusula 3.2)"
-    And contratante tem obrigação "oblig6" de "As parcelas não liquidadas nos respectivos vencimentos ficarão sujeitas à multa (cláusula 3.5)"
-    And contratante tem obrigação "oblig7" de "Dispor para a contratada, após o período de garantia (90 dias após a entrega), um pacote de 20 horas mensais ao valor de 120 reais a hora"
+  Como contratante (AAA Consultoria Empresarial) e contratada (BBB Tecnologia),
+  queremos registrar nosso acordo em um contrato inteligente
+  para que cada parte saiba quais são suas obrigações e quando elas passam a valer.
+
+  Background: As partes acordam os termos do contrato
+    Given a AAA Consultoria Empresarial é a contratante
+    And a BBB Tecnologia é a contratada
+    And o contrato é assinado no dia 10
+    And o projeto começa no dia 25
+    And o projeto termina no dia 55
+    And a contratada se compromete a prestar os serviços contratados
+    And a contratada se compromete a enviar a fatura com o relatório das horas trabalhadas
+    And a contratante se compromete a indicar um responsável técnico pelo contato com a contratada
+    And a contratante se compromete a pagar metade do serviço na assinatura do contrato
+    And a contratante se compromete a pagar a outra metade trinta dias após o início dos trabalhos
+    And a contratante se compromete a pagar multa sobre as parcelas não quitadas no vencimento
+    And a contratante se compromete a oferecer um pacote de manutenção após o período de garantia
 
   @CreateContract
-  Scenario: Create the SC_AAA_BBB contract
-    When o contrato é criado
-    Then o contrato não está ativado
-    And o estado do contrato é "Created"
-    And "oblig1" existe
-    And "oblig1" não está ativada
-    And "oblig2" existe
-    And "oblig2" não está ativada
-    And "oblig3" existe
-    And "oblig3" não está ativada
-    And "oblig4" existe
-    And "oblig4" não está ativada
-    And "oblig5" existe
-    And "oblig5" não está ativada
-    And "oblig6" existe
-    And "oblig6" não está ativada
-    And "oblig7" existe
-    And "oblig7" não está ativada
+  Scenario: O contrato é registrado, mas ainda não está valendo
+    When as partes registram o contrato
+    Then o contrato ainda não está em vigor
+    And o contrato fica no estado "Created"
+    And nenhuma das obrigações abaixo está valendo ainda:
+      | obrigação                                                       |
+      | prestar os serviços contratados                                 |
+      | enviar a fatura com o relatório das horas trabalhadas           |
+      | indicar um responsável técnico pelo contato com a contratada    |
+      | pagar metade do serviço na assinatura do contrato               |
+      | pagar a outra metade trinta dias após o início dos trabalhos    |
+      | pagar multa sobre as parcelas não quitadas no vencimento        |
+      | oferecer um pacote de manutenção após o período de garantia     |
 
   @ActivateContract
-  Scenario: Activate the SC_AAA_BBB contract
-    Given o contrato é criado
-    When o contrato é ativado
-    Then o contrato está ativado
-    And o estado do contrato é "InEffect"
-    And "oblig1" está ativada
-    And "oblig2" está ativada
-    And "oblig3" está ativada
-    And "oblig4" está ativada
-    And "oblig5" está ativada
-    And "oblig6" está ativada
-    And "oblig7" não está ativada
+  Scenario: As partes colocam o contrato em vigor e as obrigações passam a valer
+    Given as partes registraram o contrato
+    When as partes colocam o contrato em vigor
+    Then o contrato passa a estar em vigor
+    And o contrato fica no estado "InEffect"
+    And as seguintes obrigações passam a valer:
+      | obrigação                                                       |
+      | prestar os serviços contratados                                 |
+      | enviar a fatura com o relatório das horas trabalhadas           |
+      | indicar um responsável técnico pelo contato com a contratada    |
+      | pagar metade do serviço na assinatura do contrato               |
+      | pagar a outra metade trinta dias após o início dos trabalhos    |
+      | pagar multa sobre as parcelas não quitadas no vencimento        |
+    And a obrigação "oferecer um pacote de manutenção após o período de garantia" ainda não vale, pois só começa após a garantia

@@ -1,41 +1,45 @@
-Feature: Terminate SC_AAA_BBB Contract
+Feature: Encerramento do contrato de prestação de serviços entre AAA e BBB
 
-  # Features foram mergeadas porque o background era o mesmo
-  Background:
-    Given a contratante "AAA Consultoria Empresarial Ltda"
-    And a contratada "BBB Tecnologia Ltda"
-    And data de criação do contrato "10"
-    And data de início do contrato "25"
-    And data de término do contrato "55"
-    And contratada tem obrigação "oblig1" de "Prestar os serviços contratados (cláusula 2.3.I)"
-    And contratada tem obrigação "oblig2" de "Enviar fatura e relatório das horas prestadas (descrição detalhada das atividades e cronograma do projeto) (cláusula 2.3.VII)"
-    And contratante tem obrigação "oblig3" de "Indicar um colaborador responsável pelos contatos de ordem técnica com a Contratada (cláusula 2.5.IV)"
-    And contratante tem obrigação "oblig4" de "Realizar o pagamento de 50% do serviço desenvolvido na assinatura do contrato (cláusula 3.2)"
-    And contratante tem obrigação "oblig5" de "Realizar o pagamento de 50% do serviço desenvolvido trinta dias após o início dos trabalhos (cláusula 3.2)"
-    And contratante tem obrigação "oblig6" de "As parcelas não liquidadas nos respectivos vencimentos ficarão sujeitas à multa (cláusula 3.5)"
-    And contratante tem obrigação "oblig7" de "Dispor para a contratada, após o período de garantia (90 dias após a entrega), um pacote de 20 horas mensais ao valor de 120 reais a hora"
-    And o contrato é criado
-    And o contrato é ativado
+  Como contratante (AAA Consultoria Empresarial) e contratada (BBB Tecnologia),
+  queremos que o contrato inteligente saiba reconhecer quando o acordo terminou,
+  para distinguir um encerramento bem-sucedido de um encerramento por descumprimento.
+
+  Background: O contrato já está assinado e em vigor
+    Given a AAA Consultoria Empresarial é a contratante
+    And a BBB Tecnologia é a contratada
+    And o contrato é assinado no dia 10
+    And o projeto começa no dia 25
+    And o projeto termina no dia 55
+    And a contratada se compromete a prestar os serviços contratados
+    And a contratada se compromete a enviar a fatura com o relatório das horas trabalhadas
+    And a contratante se compromete a indicar um responsável técnico pelo contato com a contratada
+    And a contratante se compromete a pagar metade do serviço na assinatura do contrato
+    And a contratante se compromete a pagar a outra metade trinta dias após o início dos trabalhos
+    And a contratante se compromete a pagar multa sobre as parcelas não quitadas no vencimento
+    And a contratante se compromete a oferecer um pacote de manutenção após o período de garantia
+    And as partes registraram o contrato
+    And as partes colocaram o contrato em vigor
 
   @SuccessfullyTerminateContract
-  Scenario: Successful termination #1 of SC_AAA_BBB contract
-    When "oblig1" é satisfeita
-    And "oblig4" é satisfeita
-    And "oblig5" é satisfeita
-    Then o contrato não está ativado
-    And o estado do contrato é "Successful Termination"
-    And "oblig7" está ativada
+  Scenario: O contrato termina bem porque as partes cumpriram suas obrigações
+    When a contratada presta os serviços contratados
+    And a contratante paga metade do serviço na assinatura do contrato
+    And a contratante paga a outra metade trinta dias após o início dos trabalhos
+    Then o contrato deixa de estar em vigor
+    And o contrato fica no estado "SuccessfulTermination"
+    And a obrigação "oferecer um pacote de manutenção após o período de garantia" passa a valer
 
-  # Foi utilizado scenario outline para evitar repetição de código
+  # Basta uma única obrigação essencial não ser cumprida para o contrato terminar mal.
+  # Cada linha abaixo conta a mesma história com uma obrigação diferente sendo descumprida.
   @UnsuccessfullyTerminateContract
-  Scenario Outline: Unsuccessful termination of SC_AAA_BBB contract
-    When <oblig> não é satisfeita
-    Then o contrato não está ativado
-    And o estado do contrato é "Unsuccessful Termination"
+  Scenario Outline: O contrato termina mal porque uma obrigação não foi cumprida
+    When a parte responsável não cumpre a obrigação de "<obrigação>"
+    Then o contrato deixa de estar em vigor
+    And o contrato fica no estado "UnsuccessfulTermination"
 
     Examples:
-      | oblig  |
-      | oblig1 |
-      | oblig2 |
-      | oblig4 |
-      | oblig5 |
+      | obrigação                                                    |
+      | prestar os serviços contratados                              |
+      | enviar a fatura com o relatório das horas trabalhadas        |
+      | pagar metade do serviço na assinatura do contrato            |
+      | pagar a outra metade trinta dias após o início dos trabalhos |
