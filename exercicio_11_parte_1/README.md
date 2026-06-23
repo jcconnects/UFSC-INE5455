@@ -9,24 +9,6 @@ O contrato modela uma venda entre **seller** e **buyer**, com título, moeda
 (`USD`/`CAN`/`BRL`) e lista de produtos. Os cenários criam o contrato e verificam
 os getters via chamadas `.call()`.
 
-## Estrutura
-
-```
-exercicio_11/
-├── src/
-│   └── resources/
-│       └── ProductSaleContract.sol         # Smart contract (Solidity 0.8.0)
-├── tests/
-│   └── features/
-│       ├── CreateProductSaleContract.feature   # Background + 1 cenário + Scenario Outline
-│       └── steps/
-│           └── create-product-sale-contract.py # Glue: compila, deploya e consulta o contrato
-├── behave.ini
-├── compiled_code.json                      # Saída da compilação (gerada em runtime)
-├── pyproject.toml
-└── README.md
-```
-
 ## Pré-requisitos
 
 1. [uv](https://docs.astral.sh/uv/) para dependências Python.
