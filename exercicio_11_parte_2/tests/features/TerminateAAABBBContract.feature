@@ -1,45 +1,29 @@
 Feature: Encerramento do contrato de prestação de serviços entre AAA e BBB
 
   Como contratante (AAA Consultoria Empresarial) e contratada (BBB Tecnologia),
-  queremos que o contrato inteligente saiba reconhecer quando o acordo terminou,
+  queremos que o contrato inteligente reconheça quando o acordo terminou
   para distinguir um encerramento bem-sucedido de um encerramento por descumprimento.
 
-  Background: O contrato já está assinado e em vigor
+  Background: As partes acordam os termos do contrato
     Given a AAA Consultoria Empresarial é a contratante
     And a BBB Tecnologia é a contratada
     And o contrato é assinado no dia 10
-    And o projeto começa no dia 25
-    And o projeto termina no dia 55
-    And a contratada se compromete a prestar os serviços contratados
-    And a contratada se compromete a enviar a fatura com o relatório das horas trabalhadas
-    And a contratante se compromete a indicar um responsável técnico pelo contato com a contratada
-    And a contratante se compromete a pagar metade do serviço na assinatura do contrato
-    And a contratante se compromete a pagar a outra metade trinta dias após o início dos trabalhos
-    And a contratante se compromete a pagar multa sobre as parcelas não quitadas no vencimento
-    And a contratante se compromete a oferecer um pacote de manutenção após o período de garantia
-    And as partes registraram o contrato
-    And as partes colocaram o contrato em vigor
 
   @SuccessfullyTerminateContract
   Scenario: O contrato termina bem porque as partes cumpriram suas obrigações
+    Given o contrato existe
+    And o contrato está ativo
     When a contratada presta os serviços contratados
     And a contratante paga metade do serviço na assinatura do contrato
     And a contratante paga a outra metade trinta dias após o início dos trabalhos
-    Then o contrato deixa de estar em vigor
-    And o contrato fica no estado "SuccessfulTermination"
-    And a obrigação "oferecer um pacote de manutenção após o período de garantia" passa a valer
+    Then o contrato não está ativo
+    And o estado do contrato é "SuccessfulTermination"
 
-  # Basta uma única obrigação essencial não ser cumprida para o contrato terminar mal.
-  # Cada linha abaixo conta a mesma história com uma obrigação diferente sendo descumprida.
   @UnsuccessfullyTerminateContract
   Scenario Outline: O contrato termina mal porque uma obrigação não foi cumprida
-    When a parte responsável não cumpre a obrigação de "<obrigação>"
-    Then o contrato deixa de estar em vigor
-    And o contrato fica no estado "UnsuccessfulTermination"
+    Given o contrato existe
+    And o contrato está ativo
+    When a parte responsável não cumpre sua obrigação
+    Then o contrato não está ativo
+    And o estado do contrato é "UnsuccessfulTermination"
 
-    Examples:
-      | obrigação                                                    |
-      | prestar os serviços contratados                              |
-      | enviar a fatura com o relatório das horas trabalhadas        |
-      | pagar metade do serviço na assinatura do contrato            |
-      | pagar a outra metade trinta dias após o início dos trabalhos |

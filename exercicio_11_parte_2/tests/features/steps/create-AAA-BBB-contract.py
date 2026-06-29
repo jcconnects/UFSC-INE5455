@@ -12,73 +12,90 @@ smart_contract = None
 w3 = None
 chain_id = 1337
 
+# Status do contrato (enum no smart contract)
+STATUS = {"Created": 0, "InEffect": 1, "SuccessfulTermination": 2, "UnsuccessfulTermination": 3}
+
 
 def __deploy_contract(client, contractor, creation_date):
     global smart_contract
     global w3
 
-    # Endereço do diretório onde está o smart contract AAABBBContract
-    with open("/Users/vilain/Dropbox/Pos-Sabbatical-Project/Implementation-SmartContract-AAA-BBB-Python/src/resources/ClientContractorContract.sol", "r") as file:
+    with open("src/resources/ClientContractorContract.sol", "r") as file:
         smart_contract_file = file.read()
     _solc_version = "0.8.0"
     install_solc(_solc_version)
-    # Considerando o smart contract ProductSaleContract
     compiled_sol = compile_standard({"language": "Solidity", "sources": {"ClientContractorContract.sol": {"content": smart_contract_file}},
             "settings": {"outputSelection": {"*": {"*": ["abi", "metadata", "evm.bytecode", "evm.bytecode.sourceMap"]} } }, }, solc_version=_solc_version,)
     with open("compiled_code.json", "w") as file:
         json.dump(compiled_sol, file)
     bytecode = compiled_sol["contracts"]["ClientContractorContract.sol"]["ClientContractorContract"]["evm"]["bytecode"]["object"]
     abi = json.loads(compiled_sol["contracts"]["ClientContractorContract.sol"]["ClientContractorContract"]["metadata"])["output"]["abi"]
-    # Rodando o ganache localmente...
     w3 = Web3(Web3.HTTPProvider("HTTP://127.0.0.1:7545"))
-    smart_contract = w3.eth.contract(abi=abi, bytecode=bytecode)
-    nonce = w3.eth.get_transaction_count(address)
-    # Parâmetros do construtor do smart contract
-    transaction = smart_contract.constructor(client, contractor, creation_date).build_transaction(
-        {"chainId": chain_id, "gasPrice": w3.eth.gas_price, "from": address, "nonce": nonce})
-    sign_transaction = w3.eth.account.sign_transaction(transaction, private_key=private_key)
-    transaction_hash = w3.eth.send_raw_transaction(sign_transaction.raw_transaction)
-    transaction_receipt = w3.eth.wait_for_transaction_receipt(transaction_hash)
-    # Referência para o smart contract
-    smart_contract = w3.eth.contract(address=transaction_receipt.contractAddress, abi=abi)
+    contract = w3.eth.contract(abi=abi, bytecode=bytecode)
+    transaction = contract.constructor(client, contractor, creation_date).build_transaction(
+        {"chainId": chain_id, "gasPrice": w3.eth.gas_price, "from": address, "nonce": w3.eth.get_transaction_count(address)})
+    signed = w3.eth.account.sign_transaction(transaction, private_key=private_key)
+    tx_hash = w3.eth.send_raw_transaction(signed.raw_transaction)
+    receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+    smart_contract = w3.eth.contract(address=receipt.contractAddress, abi=abi)
 
 
-@given(u'the client named {client}')
-def step_impl(context, client):
-    context.client = "AAA"
+def __activate_contract():
+    transaction = smart_contract.functions.activate().build_transaction(
+        {"chainId": chain_id, "gasPrice": w3.eth.gas_price, "from": address, "nonce": w3.eth.get_transaction_count(address)})
+    signed = w3.eth.account.sign_transaction(transaction, private_key=private_key)
+    tx_hash = w3.eth.send_raw_transaction(signed.raw_transaction)
+    w3.eth.wait_for_transaction_receipt(tx_hash)
 
 
-@given(u'the contractor named {contractor}')
-def step_impl(context, contractor):
-    context.contractor = contractor
+# GIVEN (Background)
+
+@given(u'a AAA Consultoria Empresarial é a contratante')
+def step_impl(context):
+    context.client = "AAA Consultoria Empresarial"
 
 
-@given(u'the creation date is {date}')
-def step_impl(context, date):
-    context.creation_date = int(date)
+@given(u'a BBB Tecnologia é a contratada')
+def step_impl(context):
+    context.contractor = "BBB Tecnologia"
 
 
-@given(u'I have created and deployed the smart contract')
+@given(u'o contrato é assinado no dia {dia}')
+def step_impl(context, dia):
+    context.creation_date = int(dia)
+
+
+# GIVEN (pré-condição: contrato já existe)
+
+@given(u'o contrato existe')
 def step_impl(context):
     __deploy_contract(context.client, context.contractor, context.creation_date)
 
 
-@when(u'I activate the smart contract')
+# WHEN
+
+@when(u'o contrato passa a existir')
 def step_impl(context):
-    transaction = smart_contract.functions.activate().build_transaction({"chainId": chain_id,
-                                                                         "gasPrice": w3.eth.gas_price,
-                                                                         "from": address,
-                                                                         "nonce": w3.eth.get_transaction_count(address)})
-    sign_transaction = w3.eth.account.sign_transaction(transaction, private_key=private_key)
-    transaction_hash = w3.eth.send_raw_transaction(sign_transaction.raw_transaction)
+    __deploy_contract(context.client, context.contractor, context.creation_date)
 
 
-@then(u'the smart contract is activated')
+@when(u'o contrato é ativado')
 def step_impl(context):
-    status = smart_contract.functions.getStatus().call()
-    TestCase.assertEqual(TestCase(), 1, status)  # Status.InEffect = 1
+    __activate_contract()
 
 
-@then(u'creation date is {date}')
-def step_impl(context, date):
-    TestCase.assertEqual(TestCase(), int(date), smart_contract.functions.getCreationDate().call())
+# THEN
+
+@then(u'o contrato não está ativo')
+def step_impl(context):
+    TestCase().assertFalse(smart_contract.functions.isActivated().call())
+
+
+@then(u'o contrato está ativo')
+def step_impl(context):
+    TestCase().assertTrue(smart_contract.functions.isActivated().call())
+
+
+@then(u'o estado do contrato é "{estado}"')
+def step_impl(context, estado):
+    TestCase().assertEqual(STATUS[estado], smart_contract.functions.getStatus().call())
