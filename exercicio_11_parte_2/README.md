@@ -9,8 +9,9 @@ O contrato é compilado com [py-solc-x](https://pypi.org/project/py-solc-x/) e i
 numa blockchain Ethereum local via [web3.py](https://web3py.readthedocs.io/).
 
 O contrato modela a relação entre **contratante** (client) e **contratada** (contractor):
-datas (criação, início, término), lista de **obrigações** de cada parte, e o ciclo de vida
-do contrato (`Created` → `InEffect` → `SuccessfulTermination` / `UnsuccessfulTermination`).
+data de assinatura e o ciclo de vida do contrato
+(`Created` → `InEffect` → `SuccessfulTermination` / `UnsuccessfulTermination`).
+Por ora, o glue cobre a parte de **criação/ativação** (`Created` → `InEffect`).
 
 ## Parte 1 vs. Parte 2
 
@@ -40,42 +41,50 @@ As instruções do exercício usam o **Ganache GUI** (opção *Quickstart* + aju
 então não há menu: os mesmos valores viram **flags** na linha de comando.
 
 O glue code aponta para `HTTP://127.0.0.1:7545`, mas o Ganache ouve em `8545` por
-padrão. Suba na porta `7545` com `Gas Limit = 9000000` e `Gas Price = 4100000000`:
+padrão. Além disso, o glue **assina as transações com uma conta fixa** (`address` /
+`private_key` no topo de `create-AAA-BBB-contract.py`). Por padrão o Ganache cria contas
+aleatórias, então essa conta não existiria — e o deploy falharia. É preciso **semear a
+conta** com a chave privada do glue e saldo via `--wallet.accounts <chave>,<saldo_wei>`.
+
+Suba na porta `7545`, com `Gas Limit = 9000000`, `Gas Price = 4100000000`, `chainId = 1337`
+(igual ao `chain_id` do glue) e a conta do glue semeada com 1000 ETH:
 
 ```bash
 npx ganache \
   -p 7545 \
+  --chain.chainId 1337 \
   --miner.blockGasLimit 9000000 \
-  --miner.defaultGasPrice 4100000000
+  --miner.defaultGasPrice 4100000000 \
+  --wallet.accounts 0x65003de1163f6c193dd214b5d3fdfa7a7d79afacc0114d81d565ae1e7a04f562,1000000000000000000000
 ```
+
+> O endereço `0xDfDb2B6FdF25F7A0850AfBd369A69f5d6819587E` é **derivado** dessa chave
+> privada — por isso basta passar a chave; o Ganache calcula o endereço. `1000000000000000000000`
+> = 1000 ETH em wei (10²¹), só para cobrir o gás.
 
 Deixe esse processo rodando num terminal e rode os testes noutro.
 
 ## Configuração obrigatória
 
-Antes de rodar, ajuste o glue code em `tests/features/steps/create-AAA-BBB-contract.py`:
+O glue code (`tests/features/steps/create-AAA-BBB-contract.py`) usa:
 
-- **Conta e chave** (`address`, `private_key`): devem corresponder a uma conta com saldo
-  na sua instância do Ganache. `chain_id = 1337` é o padrão do Ganache.
-- **Caminho do `.sol`**: o glue abre o `ClientContractorContract.sol` por caminho. Use um
-  caminho relativo (`src/resources/ClientContractorContract.sol`) ou ajuste o absoluto
-  para a sua máquina.
+- **Conta e chave** (`address`, `private_key`): a conta semeada no comando do Ganache
+  acima. Se trocar a chave no glue, troque também no `--wallet.accounts`. `chain_id = 1337`
+  precisa bater com o `--chain.chainId` do Ganache.
+- **Caminho do `.sol`**: relativo (`src/resources/ClientContractorContract.sol`) — rode o
+  `behave` a partir da raiz do projeto (`exercicio_11_parte_2/`).
 
-> Sem o Ganache rodando, os cenários falham na etapa `When o contrato é criado` (deploy).
+> Sem o Ganache rodando — ou com a conta do glue **sem saldo** — os cenários dão **erro**
+> na etapa de deploy (`When o contrato passa a existir` / `Given o contrato existe`).
 
 ## Execução
 
-Todos os testes:
+Com o Ganache rodando, a partir da raiz do projeto.
 
-```bash
-uv run behave
-```
-
-Uma feature específica:
+A feature de criação (glue implementado, **passa**):
 
 ```bash
 uv run behave tests/features/CreateAAABBBContract.feature
-uv run behave tests/features/TerminateAAABBBContract.feature
 ```
 
 Filtros úteis:
@@ -84,15 +93,17 @@ Filtros úteis:
 # Por tag
 uv run behave --tags=@CreateContract
 uv run behave --tags=@ActivateContract
-uv run behave --tags=@SuccessfullyTerminateContract
-uv run behave --tags=@UnsuccessfullyTerminateContract
 
 # Por nome de cenário (regex)
-uv run behave -n "Create the SC_AAA_BBB contract"
+uv run behave -n "O contrato é registrado"
 
 # Parar no primeiro erro
 uv run behave --stop
 ```
+
+> A feature `TerminateAAABBBContract.feature` **ainda não tem glue** (os passos de
+> terminação dependem de funções de encerramento no `.sol`). Rodar `uv run behave` sem
+> filtro reporta esses passos como *undefined*.
 
 ## Implementação da Parte 2
 
@@ -138,18 +149,16 @@ Dicas do enunciado:
 
 | Item                                | O que cobre                                                                                  |
 |-------------------------------------|---------------------------------------------------------------------------------------------|
-| `ClientContractorContract.sol`      | Construtor (client/contractor/datas), obrigações, `activate`, satisfação e ciclo de vida.    |
-| `CreateAAABBBContract.feature`      | `Background` (partes + datas + obrigações) + cenários **criar** e **ativar** contrato.       |
-| `TerminateAAABBBContract.feature`   | `Background` (cria + ativa) + terminação com **sucesso** e `Scenario Outline` de **insucesso**. |
+| `ClientContractorContract.sol`      | Construtor (client/contractor/data), `activate` e getters `view` (`getStatus`, `isActivated`). |
+| `CreateAAABBBContract.feature`      | `Background` (partes + data) + cenários **criar** (`@CreateContract`) e **ativar** (`@ActivateContract`). |
+| `TerminateAAABBBContract.feature`   | Terminação com **sucesso** e `Scenario Outline` de **insucesso** (glue pendente).             |
 | `create-AAA-BBB-contract.py`        | Glue: compila o `.sol` (`solcx`), deploya via `web3.py` e dirige/consulta o contrato.        |
 
-## Fluxo do teste
+## Fluxo do teste (criação)
 
-1. `Background` define contratante, contratada, datas e obrigações no `context`.
-2. `When o contrato é criado` → compila o contrato (`solcx`), monta e assina a transação
-   de deploy, e envia para o Ganache (`web3.py`).
-3. `When o contrato é ativado` → envia a transação `activate()` (modifica estado).
-4. Passos de obrigação (`"obligN" é satisfeita` / `não é satisfeita`) enviam transações que
-   mudam o estado de cada obrigação e, ao final, o `Status` do contrato.
-5. Passos `Then` chamam getters `view` via `.call()` (`getStatus`, existência/ativação de
-   obrigação, etc.) e comparam com os valores esperados.
+1. `Background` define contratante, contratada e a data de assinatura no `context`.
+2. `When o contrato passa a existir` (e `Given o contrato existe`) → compila o `.sol`
+   (`solcx`), monta e assina a transação de deploy, e envia para o Ganache (`web3.py`).
+3. `When o contrato é ativado` → envia a transação `activate()` (modifica estado → `InEffect`).
+4. Passos `Then` chamam getters `view` via `.call()` (`isActivated`, `getStatus`) e comparam
+   com os valores esperados (`STATUS` mapeia o nome do estado para o índice do `enum`).
