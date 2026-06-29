@@ -12,12 +12,10 @@ contract ClientContractorContract {
     string contractor;
     int creationDate;
 
-    struct Obligation {
-        bool exists;
-        bool activated;
-    }
-
-    mapping(string => Obligation) obligations;
+    // Obrigações essenciais para o encerramento bem-sucedido
+    bool servicesProvided;
+    bool firstHalfPaid;
+    bool secondHalfPaid;
 
     constructor( string memory _client, string memory _contractor, int _creationDate ) public {
         client = _client;
@@ -28,12 +26,38 @@ contract ClientContractorContract {
 
     //SETTERS
 
-    function addObligation(string memory _id) public {
-        obligations[_id] = Obligation(true, false);
-    }
-
     function activate () public {
         status = Status.InEffect;
+    }
+
+    // A contratada presta os serviços contratados
+    function provideServices() public {
+        servicesProvided = true;
+        evaluateTermination();
+    }
+
+    // A contratante paga metade do serviço na assinatura do contrato
+    function payFirstHalf() public {
+        firstHalfPaid = true;
+        evaluateTermination();
+    }
+
+    // A contratante paga a outra metade trinta dias após o início dos trabalhos
+    function paySecondHalf() public {
+        secondHalfPaid = true;
+        evaluateTermination();
+    }
+
+    // Encerramento bem-sucedido quando todas as obrigações essenciais foram cumpridas
+    function evaluateTermination() private {
+        if ((servicesProvided) && (firstHalfPaid) && (secondHalfPaid)) {
+            status = Status.SuccessfulTermination;
+        }
+    }
+
+    // Uma obrigação essencial não foi cumprida: encerramento malsucedido
+    function breach() public {
+        status = Status.UnsuccessfulTermination;
     }
 
     //GETTERS
@@ -54,14 +78,6 @@ contract ClientContractorContract {
 
     function getCreationDate() public view returns (int) {
         return creationDate;
-    }
-
-    function obligationExists(string memory _id) public view returns (bool) {
-        return obligations[_id].exists;
-    }
-
-    function isObligationActivated(string memory _id) public view returns (bool) {
-        return obligations[_id].activated;
     }
 
 }
