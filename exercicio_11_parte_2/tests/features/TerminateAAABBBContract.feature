@@ -20,7 +20,7 @@ Feature: Encerramento do contrato de prestação de serviços entre AAA e BBB
     And o estado do contrato é "SuccessfulTermination"
 
   @UnsuccessfullyTerminateContract
-  Scenario Outline: O contrato termina mal porque uma obrigação não foi cumprida
+  Scenario: O contrato termina mal porque uma obrigação não foi cumprida
     Given o contrato existe
     And o contrato está ativo
     When a parte responsável não cumpre sua obrigação
